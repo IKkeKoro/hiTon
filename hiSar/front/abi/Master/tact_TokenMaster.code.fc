@@ -14,33 +14,38 @@
     var (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice)) = (0, true, null(), null(), null());
     $self'owner = $owner;
     $self'jetton_content = $jetton_content;
+    $self'subscribePrice~__tact_dict_set_int_cell(257, 0, $Level$_store_cell($Level$_constructor_jettons_price(100000000000, 100000000)));
+    $self'subscribePrice~__tact_dict_set_int_cell(257, 1, $Level$_store_cell($Level$_constructor_jettons_price(300000000000, 300000000)));
+    $self'subscribePrice~__tact_dict_set_int_cell(257, 2, $Level$_store_cell($Level$_constructor_jettons_price(500000000000, 500000000)));
+    $self'subscribePrice~__tact_dict_set_int_cell(257, 3, $Level$_store_cell($Level$_constructor_jettons_price(1000000000000, 1000000000)));
+    $self'subscribePrice~__tact_dict_set_int_cell(257, 4, $Level$_store_cell($Level$_constructor_jettons_price(4000000000000, 3000000000)));
     return ($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice);
 }
 
 ((int, int, slice, cell, cell), (int, int, slice, cell, cell, slice)) $TokenMaster$_fun_get_jetton_data((int, int, slice, cell, cell) $self) impure inline_ref {
     var (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice)) = $self;
     slice $pool = $global_contractAddress($MembersPool$_init_child(__tact_context_sys, $global_myAddress()));
-    var $fresh$ret_14 = $MasterData$_constructor_pool_total_supply_mintable_owner_jetton_content_jetton_wallet_code($pool, $self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $StateInit$_get_code($TokenWallet$_init_child(__tact_context_sys, $self'owner, $global_myAddress())));
-    return (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice), $fresh$ret_14);
+    var $fresh$ret_17 = $MasterData$_constructor_pool_total_supply_mintable_owner_jetton_content_jetton_wallet_code($pool, $self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $StateInit$_get_code($TokenWallet$_init_child(__tact_context_sys, $self'owner, $global_myAddress())));
+    return (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice), $fresh$ret_17);
 }
 
 ((int, int, slice, cell, cell), cell) $TokenMaster$_fun_subscribePrice((int, int, slice, cell, cell) $self) impure inline_ref {
     var (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice)) = $self;
-    var $fresh$ret_15 = $self'subscribePrice;
-    return (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice), $fresh$ret_15);
+    var $fresh$ret_18 = $self'subscribePrice;
+    return (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice), $fresh$ret_18);
 }
 
 ((int, int, slice, cell, cell), slice) $TokenMaster$_fun_get_wallet_address((int, int, slice, cell, cell) $self, slice $owner_address) impure inline_ref {
     var (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice)) = $self;
     var ($init'code, $init'data) = $TokenWallet$_init_child(__tact_context_sys, $owner_address, $global_myAddress());
-    var $fresh$ret_16 = $global_contractAddress(($init'code, $init'data));
-    return (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice), $fresh$ret_16);
+    var $fresh$ret_19 = $global_contractAddress(($init'code, $init'data));
+    return (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice), $fresh$ret_19);
 }
 
 ((int, int, slice, cell, cell), slice) $TokenMaster$_fun_poolAddress((int, int, slice, cell, cell) $self) impure inline_ref {
     var (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice)) = $self;
-    var $fresh$ret_17 = $global_contractAddress($MembersPool$_init_child(__tact_context_sys, $global_myAddress()));
-    return (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice), $fresh$ret_17);
+    var $fresh$ret_20 = $global_contractAddress($MembersPool$_init_child(__tact_context_sys, $global_myAddress()));
+    return (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice), $fresh$ret_20);
 }
 
 ;;
@@ -92,9 +97,10 @@
     var ($init'code, $init'data) = $TokenWallet$_init_child(__tact_context_sys, __tact_context_get_sender(), $global_myAddress());
     slice $to = $global_contractAddress(($init'code, $init'data));
     throw_unless(41747, ($data'price > 0));
-    throw_unless(51724, ($Context$_get_value(__tact_context_get()) >= ($data'price + $Context$_fun_readForwardFee(__tact_context_get()))));
+    throw_unless(51724, ($Context$_get_value(__tact_context_get()) >= (($data'price + $Context$_fun_readForwardFee(__tact_context_get())) + 100000000)));
     $self'total_supply = ((($self'total_supply + $data'jettons) + ($data'jettons / 10)) + ($data'jettons / 20));
-    $global_send($SendParameters$_constructor_to_value_mode_bounce_body_data_code($to, 0, 64, false, $UpdateSubscribe$_store_cell($UpdateSubscribe$_constructor_jettons_price($data'jettons, $data'price)), $init'data, $init'code));
+    int $sendValue = (($data'price / 10) + ($data'price / 20));
+    $global_send($SendParameters$_constructor_to_value_mode_bounce_body_data_code($to, ($sendValue + 100000000), 0, false, $UpdateSubscribe$_store_cell($UpdateSubscribe$_constructor_jettons_price($data'jettons, $data'price)), $init'data, $init'code));
     return (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice), ());
 }
 
@@ -126,6 +132,7 @@
     var ($msg'wallet, $msg'sender, $msg'amount) = $msg;
     slice $wallet = $global_contractAddress($TokenWallet$_init_child(__tact_context_sys, $msg'sender, $global_myAddress()));
     if (( __tact_slice_eq_bits($wallet, $msg'wallet) )) {
+        $global_send($SendParameters$_constructor_to_value_mode_body($wallet, 50000000, 0, $AddVots$_store_cell($AddVots$_constructor_amount($msg'amount))));
         $global_send($SendParameters$_constructor_to_value_mode_body(__tact_context_get_sender(), 0, 64, $Validate$_store_cell($Validate$_constructor_wallet_sender_amount($wallet, $msg'sender, $msg'amount))));
     }
     return (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content, $self'subscribePrice), ());

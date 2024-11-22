@@ -35,7 +35,6 @@
     throw_unless(61739, ( __tact_slice_eq_bits($from, __tact_context_get_sender()) ));
     $self'invested = $self'invested + $msg'invested;
     $self'voted = $self'voted + $msg'voted;
-    $global_send($SendParameters$_constructor_to_value_mode_body(__tact_context_get_sender(), 0, 64, $UserWithdraw$_store_cell($UserWithdraw$_constructor_from_withdrawnAt_voted_invested(__tact_context_get_sender(), $self'withdrawnAt, $self'voted, $self'invested))));
     return (($self'owner, $self'projectId, $self'deployer, $self'invested, $self'voted, $self'withdrawnAt, $self'totalIncome), ());
 }
 

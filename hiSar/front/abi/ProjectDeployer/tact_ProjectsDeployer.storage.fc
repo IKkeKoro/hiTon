@@ -132,46 +132,54 @@ cell $DeployDonation$_store_cell(((slice, slice, slice, slice), slice) v) inline
 
 ;;
 ;; Type: NewProject
-;; Header: 0x3090d98e
-;; TLB: new_project#3090d98e address:address id:uint64 = NewProject
+;; Header: 0x57350805
+;; TLB: new_project#57350805 address:address id:uint64 data:Data{title:^string,description:^string,image:^string,link:^string} owner:address required:coins percents:dict<int, int> = NewProject
 ;;
 
-builder $NewProject$_store(builder build_0, (slice, int) v) inline {
-    var (v'address, v'id) = v;
-    build_0 = store_uint(build_0, 814799246, 32);
+builder $NewProject$_store(builder build_0, (slice, int, (slice, slice, slice, slice), slice, int, cell) v) inline_ref {
+    var (v'address, v'id, (v'data'title, v'data'description, v'data'image, v'data'link), v'owner, v'required, v'percents) = v;
+    build_0 = store_uint(build_0, 1463093253, 32);
     build_0 = __tact_store_address(build_0, v'address);
     build_0 = build_0.store_uint(v'id, 64);
+    var build_1 = begin_cell();
+    build_1 = $Data$_store(build_1, (v'data'title, v'data'description, v'data'image, v'data'link));
+    build_1 = __tact_store_address(build_1, v'owner);
+    build_1 = build_1.store_coins(v'required);
+    build_1 = build_1.store_dict(v'percents);
+    build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $NewProject$_store_cell((slice, int) v) inline {
+cell $NewProject$_store_cell((slice, int, (slice, slice, slice, slice), slice, int, cell) v) inline {
     return $NewProject$_store(begin_cell(), v).end_cell();
 }
 
-((slice, int)) $NewProject$_constructor_address_id(slice $address, int $id) inline {
-    return ($address, $id);
+((slice, int, (slice, slice, slice, slice), slice, int, cell)) $NewProject$_constructor_address_id_data_owner_required_percents(slice $address, int $id, (slice, slice, slice, slice) $data, slice $owner, int $required, cell $percents) inline {
+    return ($address, $id, $data, $owner, $required, $percents);
 }
 
 ;;
 ;; Type: NewDonation
-;; Header: 0x1b6d743e
-;; TLB: new_donation#1b6d743e address:address id:uint64 = NewDonation
+;; Header: 0xc83f5563
+;; TLB: new_donation#c83f5563 address:address id:uint64 owner:address data:Data{title:^string,description:^string,image:^string,link:^string} = NewDonation
 ;;
 
-builder $NewDonation$_store(builder build_0, (slice, int) v) inline {
-    var (v'address, v'id) = v;
-    build_0 = store_uint(build_0, 460158014, 32);
+builder $NewDonation$_store(builder build_0, (slice, int, slice, (slice, slice, slice, slice)) v) inline {
+    var (v'address, v'id, v'owner, (v'data'title, v'data'description, v'data'image, v'data'link)) = v;
+    build_0 = store_uint(build_0, 3359593827, 32);
     build_0 = __tact_store_address(build_0, v'address);
     build_0 = build_0.store_uint(v'id, 64);
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = $Data$_store(build_0, (v'data'title, v'data'description, v'data'image, v'data'link));
     return build_0;
 }
 
-cell $NewDonation$_store_cell((slice, int) v) inline {
+cell $NewDonation$_store_cell((slice, int, slice, (slice, slice, slice, slice)) v) inline {
     return $NewDonation$_store(begin_cell(), v).end_cell();
 }
 
-((slice, int)) $NewDonation$_constructor_address_id(slice $address, int $id) inline {
-    return ($address, $id);
+((slice, int, slice, (slice, slice, slice, slice))) $NewDonation$_constructor_address_id_owner_data(slice $address, int $id, slice $owner, (slice, slice, slice, slice) $data) inline {
+    return ($address, $id, $owner, $data);
 }
 
 ;;

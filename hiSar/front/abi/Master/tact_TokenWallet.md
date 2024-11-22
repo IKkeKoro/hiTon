@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: TokenWallet
-BOC Size: 3239 bytes
+BOC Size: 3325 bytes
 
 # Types
-Total Types: 41
+Total Types: 42
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -26,8 +26,12 @@ TLB: `_ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Ma
 Signature: `SendParameters{bounce:bool,to:address,value:int257,mode:int257,body:Maybe ^cell,code:Maybe ^cell,data:Maybe ^cell}`
 
 ## WalletData
-TLB: `_ balance:int257 owner:address master:address code:^cell totalVoted:int257 inviter:address poolWithdrawnAt:int257 = WalletData`
-Signature: `WalletData{balance:int257,owner:address,master:address,code:^cell,totalVoted:int257,inviter:address,poolWithdrawnAt:int257}`
+TLB: `_ balance:int257 owner:address master:address code:^cell = WalletData`
+Signature: `WalletData{balance:int257,owner:address,master:address,code:^cell}`
+
+## MemberData
+TLB: `_ totalVoted:int257 lastClaimed:int257 subscribedUntil:int257 jettonsToClaim:int257 inviter:address poolWithdrawnAt:int257 = MemberData`
+Signature: `MemberData{totalVoted:int257,lastClaimed:int257,subscribedUntil:int257,jettonsToClaim:int257,inviter:address,poolWithdrawnAt:int257}`
 
 ## TokenWallet$Data
 TLB: `null`
@@ -74,8 +78,8 @@ TLB: `ref_income#231735ec amount:coins sender:address counter:uint8 income:coins
 Signature: `RefIncome{amount:coins,sender:address,counter:uint8,income:coins}`
 
 ## AddVots
-TLB: `add_vots#88d365b8 sender:address amount:coins = AddVots`
-Signature: `AddVots{sender:address,amount:coins}`
+TLB: `add_vots#eca2354f amount:coins = AddVots`
+Signature: `AddVots{amount:coins}`
 
 ## CheckSupply
 TLB: `check_supply#25ca1787 totalVoted:coins sender:address poolWithdrawnAt:coins = CheckSupply`
@@ -170,9 +174,11 @@ TLB: `null`
 Signature: `null`
 
 # Get Methods
-Total Get Methods: 1
+Total Get Methods: 2
 
 ## get_wallet_data
+
+## memberData
 
 # Error Codes
 2: Stack underflow

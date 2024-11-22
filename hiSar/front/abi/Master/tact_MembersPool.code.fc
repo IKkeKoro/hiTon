@@ -18,8 +18,8 @@
 
 ((int, slice), (int, slice)) $MembersPool$_fun_poolData((int, slice) $self) impure inline_ref {
     var (($self'totalIncome, $self'master)) = $self;
-    var $fresh$ret_7 = $PoolData$_constructor_totalIncome_master($self'totalIncome, $self'master);
-    return (($self'totalIncome, $self'master), $fresh$ret_7);
+    var $fresh$ret_9 = $PoolData$_constructor_totalIncome_master($self'totalIncome, $self'master);
+    return (($self'totalIncome, $self'master), $fresh$ret_9);
 }
 
 ;;

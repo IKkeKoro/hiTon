@@ -45,6 +45,12 @@ builder $DonationEvent$_store(builder build_0, (int, slice) v) inline;
 ;; $DonationEvent$_store_cell
 cell $DonationEvent$_store_cell((int, slice) v) inline;
 
+;; $NewDonation$_store
+builder $NewDonation$_store(builder build_0, (slice, int, slice, (slice, slice, slice, slice)) v) inline;
+
+;; $NewDonation$_store_cell
+cell $NewDonation$_store_cell((slice, int, slice, (slice, slice, slice, slice)) v) inline;
+
 ;; $ChangeActive$_load
 (slice, ((int))) $ChangeActive$_load(slice sc_0) inline;
 
@@ -86,6 +92,9 @@ int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline
 
 ;; $Donation$_fun_donationData
 ((int, slice, int, slice, (slice, slice, slice, slice), int), (int, slice, int, slice, (slice, slice, slice, slice))) $Donation$_fun_donationData((int, slice, int, slice, (slice, slice, slice, slice), int) $self) impure inline_ref;
+
+;; $NewDonation$_constructor_address_id_owner_data
+((slice, int, slice, (slice, slice, slice, slice))) $NewDonation$_constructor_address_id_owner_data(slice $address, int $id, slice $owner, (slice, slice, slice, slice) $data) inline;
 
 ;; $DonationEvent$_constructor_amount_from
 ((int, slice)) $DonationEvent$_constructor_amount_from(int $amount, slice $from) inline;

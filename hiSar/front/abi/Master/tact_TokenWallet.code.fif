@@ -40,6 +40,7 @@ PROGRAM{
   DECLPROC $StateInit$_get_code
   DECLPROC $Context$_get_sender
   DECLPROC $WalletData$_to_external
+  DECLPROC $MemberData$_to_external
   DECLPROC $TokenWallet$init$_store
   DECLPROC $TokenWallet$init$_load
   DECLPROC $MembersPool$init$_store
@@ -50,8 +51,10 @@ PROGRAM{
   DECLPROC $global_send
   DECLPROC $Context$_fun_readForwardFee
   DECLPROC $TokenWallet$_init_child
-  DECLPROC $WalletData$_constructor_balance_poolWithdrawnAt_totalVoted_inviter_owner_master_code
+  DECLPROC $WalletData$_constructor_balance_owner_master_code
   DECLPROC $TokenWallet$_fun_get_wallet_data
+  DECLPROC $MemberData$_constructor_totalVoted_lastClaimed_subscribedUntil_jettonsToClaim_inviter_poolWithdrawnAt
+  DECLPROC $TokenWallet$_fun_memberData
   DECLPROC $MembersPool$_init_child
   DECLPROC $SendParameters$_constructor_to_value_mode_bounce_body_data_code
   DECLPROC $InternalTransfer$_constructor_query_id_amount_from_response_destination_forward_ton_amount_forward_payload
@@ -60,8 +63,8 @@ PROGRAM{
   DECLPROC $TransferNotification$_constructor_query_id_amount_sender_forward_payload
   DECLPROC $SendParameters$_constructor_to_value_mode_body
   DECLPROC $BurnNotification$_constructor_query_id_amount_sender_response_destination
-  DECLPROC $RefIncome$_constructor_income_sender_amount_counter
   DECLPROC $SendParameters$_constructor_to_value_mode_body_data_code
+  DECLPROC $RefIncome$_constructor_income_sender_amount_counter
   DECLPROC $CheckSupply$_constructor_sender_poolWithdrawnAt_totalVoted
   DECLPROC $MintVots$_constructor_amount_sender
   DECLPROC %$TokenWallet$_internal_empty
@@ -78,6 +81,7 @@ PROGRAM{
   DECLPROC $TokenWallet$_receive_binary_bounce_InternalTransfer
   DECLPROC $TokenWallet$_receive_binary_bounce_BurnNotification
   97026 DECLMETHOD %get_wallet_data
+  111056 DECLMETHOD %memberData
   115390 DECLMETHOD lazy_deployment_completed
   DECLPROC $TokenWallet$_contract_router_internal
   DECLPROC recv_internal
@@ -235,13 +239,11 @@ PROGRAM{
   $AddVots$_load PROCINLINE:<{
     32 LDU
     SWAP
-    2295555512 PUSHINT
+    3970053455 PUSHINT
     EQUAL
     129 THROWIFNOT
-    __tact_load_address INLINECALLDICT
-    SWAP
     LDVARUINT16
-    -ROT
+    SWAP
   }>
   $CheckSupply$_store PROCINLINE:<{
     634001287 PUSHINT
@@ -513,6 +515,8 @@ PROGRAM{
   }>
   $WalletData$_to_external PROCINLINE:<{
   }>
+  $MemberData$_to_external PROCINLINE:<{
+  }>
   $TokenWallet$init$_store PROCINLINE:<{
     -ROT
     __tact_store_address INLINECALLDICT
@@ -732,19 +736,23 @@ PROGRAM{
     $TokenWallet$init$_store INLINECALLDICT
     ENDC
   }>
-  $WalletData$_constructor_balance_poolWithdrawnAt_totalVoted_inviter_owner_master_code PROCINLINE:<{
-    s5 s3 s3 XCHG3
-    s4 s1 s4 XCHG3
+  $WalletData$_constructor_balance_owner_master_code PROCINLINE:<{
   }>
   $TokenWallet$_fun_get_wallet_data PROCREF:<{
     __tact_context_sys GETGLOB
     s8 s7 PUSH2
     $TokenWallet$_init_child INLINECALLDICT
     $StateInit$_get_code INLINECALLDICT
-    s9 s1 s(-2) PU2XC
-    s4 s5 s(-2) PU2XC
-    s12 s11 s(-2) PU2XC
-    $WalletData$_constructor_balance_poolWithdrawnAt_totalVoted_inviter_owner_master_code INLINECALLDICT
+    s9 s8 s(-2) PU2XC
+    s9 s(-1) PUXC
+    $WalletData$_constructor_balance_owner_master_code INLINECALLDICT
+  }>
+  $MemberData$_constructor_totalVoted_lastClaimed_subscribedUntil_jettonsToClaim_inviter_poolWithdrawnAt PROCINLINE:<{
+  }>
+  $TokenWallet$_fun_memberData PROCREF:<{
+    s1 s5 s4 PUSH3
+    s6 s5 s3 PUSH3
+    $MemberData$_constructor_totalVoted_lastClaimed_subscribedUntil_jettonsToClaim_inviter_poolWithdrawnAt INLINECALLDICT
   }>
   $MembersPool$_init_child PROCREF:<{
     SWAP
@@ -804,15 +812,15 @@ PROGRAM{
   }>
   $BurnNotification$_constructor_query_id_amount_sender_response_destination PROCINLINE:<{
   }>
-  $RefIncome$_constructor_income_sender_amount_counter PROCINLINE:<{
-    s0 s3 XCHG2
-  }>
   $SendParameters$_constructor_to_value_mode_body_data_code PROCINLINE:<{
     TRUE
     s0 s6 XCHG
     s0 s5 XCHG
     s0 s4 XCHG
     s3 s1 s3 XCHG3
+  }>
+  $RefIncome$_constructor_income_sender_amount_counter PROCINLINE:<{
+    s0 s3 XCHG2
   }>
   $CheckSupply$_constructor_sender_poolWithdrawnAt_totalVoted PROCINLINE:<{
     -ROT
@@ -892,9 +900,9 @@ PROGRAM{
   }>
   $TokenWallet$_internal_binary_AddVots PROCINLINE:<{
     4429 PUSHINT
-    s2 s10 XCPU
+    __tact_context_get_sender INLINECALLDICT
+    s9 s(-1) PUXC
     __tact_slice_eq_bits INLINECALLDICT
-    s1 s2 XCHG
     THROWANYIFNOT
     s1 s2 XCHG
     ADD
@@ -1006,28 +1014,41 @@ PROGRAM{
     s8 PUSH
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
-    s8 s5 XCPU
+    __tact_context_sys GETGLOB
+    s3 s7 PUSH2
+    $TokenWallet$_init_child INLINECALLDICT
+    2DUP
+    $global_contractAddress INLINECALLDICT
+    s11 s8 XCPU
     ADD
         NOW
         NOW
     INC
     2419200 PUSHINT
     ADD
-    s0 s6 XCHG
+    s0 s9 XCHG
     10 PUSHINT
     DIV
+    DUP
+    1 RSHIFT#
+    s1 s(-1) PUXC
+    ADD
+    40000000 PUSHINT
+    ADD
+    s1 s13 XCPU
+    64 PUSHINT
+    s0 s13 XCHG
     0 PUSHINT
-    s1 s(-1) s(-1) PUXCPU
-    s12 s10 s(-1) PUXC2
     $RefIncome$_constructor_income_sender_amount_counter INLINECALLDICT
     $RefIncome$_store_cell INLINECALLDICT
-    s10 PUSH
-    s0 s3 XCHG
-    s9 s9 XCHG2
-    $SendParameters$_constructor_to_value_mode_body INLINECALLDICT
+    s5 s14 XCHG
+    s1 s4 XCHG
+    s3 s11 XCHG
+    s0 s1 s14 XCHG3
+    $SendParameters$_constructor_to_value_mode_body_data_code INLINECALLDICT
     $global_send INLINECALLDICT
     DROP
-    s0 s8 XCHG
+    s5 s8 XCHG
   }>
   $TokenWallet$_internal_binary_RefIncome PROCINLINE:<{
     __tact_context_sys GETGLOB
@@ -1055,13 +1076,18 @@ PROGRAM{
     s14 PUSH
     1 LESSINT
     IF:<{
+      DUP
+      20000000 PUSHINT
+      ADD
       0 PUSHINT
-      s0 s6 XCHG
+      s0 s7 XCHG
       1 RSHIFT#
-      s0 s15 XCHG
+      s0 16 s() XCHG
       INC
-      s14 s1 s(-2) PU2XC
-      s1 17 s() XCHG
+      s15 PUSH
+      s0 s2 XCHG
+      s0 17 s() XCHG
+      SWAP
       $RefIncome$_constructor_income_sender_amount_counter INLINECALLDICT
       $RefIncome$_store_cell INLINECALLDICT
       s4 s5 XCHG
@@ -1168,8 +1194,14 @@ PROGRAM{
   %get_wallet_data PROC:<{
     $TokenWallet$_contract_load INLINECALLDICT
     $TokenWallet$_fun_get_wallet_data INLINECALLDICT
-    9 7 BLKDROP2
+    9 4 BLKDROP2
     $WalletData$_to_external INLINECALLDICT
+  }>
+  %memberData PROC:<{
+    $TokenWallet$_contract_load INLINECALLDICT
+    $TokenWallet$_fun_memberData INLINECALLDICT
+    9 6 BLKDROP2
+    $MemberData$_to_external INLINECALLDICT
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -1253,12 +1285,12 @@ PROGRAM{
       TRUE
     }>
     DUP
-    2295555512 PUSHINT
+    3970053455 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
       $AddVots$_load INLINECALLDICT
-      1 2 BLKDROP2
+      NIP
       $TokenWallet$_internal_binary_AddVots INLINECALLDICT
       TRUE
     }>

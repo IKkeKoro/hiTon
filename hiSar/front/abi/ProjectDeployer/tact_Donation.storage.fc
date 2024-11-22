@@ -108,6 +108,30 @@ cell $DonationEvent$_store_cell((int, slice) v) inline {
 }
 
 ;;
+;; Type: NewDonation
+;; Header: 0xc83f5563
+;; TLB: new_donation#c83f5563 address:address id:uint64 owner:address data:Data{title:^string,description:^string,image:^string,link:^string} = NewDonation
+;;
+
+builder $NewDonation$_store(builder build_0, (slice, int, slice, (slice, slice, slice, slice)) v) inline {
+    var (v'address, v'id, v'owner, (v'data'title, v'data'description, v'data'image, v'data'link)) = v;
+    build_0 = store_uint(build_0, 3359593827, 32);
+    build_0 = __tact_store_address(build_0, v'address);
+    build_0 = build_0.store_uint(v'id, 64);
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = $Data$_store(build_0, (v'data'title, v'data'description, v'data'image, v'data'link));
+    return build_0;
+}
+
+cell $NewDonation$_store_cell((slice, int, slice, (slice, slice, slice, slice)) v) inline {
+    return $NewDonation$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, slice, (slice, slice, slice, slice))) $NewDonation$_constructor_address_id_owner_data(slice $address, int $id, slice $owner, (slice, slice, slice, slice) $data) inline {
+    return ($address, $id, $owner, $data);
+}
+
+;;
 ;; Type: ChangeActive
 ;; Header: 0x41c3d5cb
 ;; TLB: change_active#41c3d5cb active:bool = ChangeActive

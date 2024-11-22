@@ -79,6 +79,17 @@ cell $DeployOk$_store_cell((int) v) inline {
 ;; TLB: _ jettons:int257 price:int257 = Level
 ;;
 
+builder $Level$_store(builder build_0, (int, int) v) inline {
+    var (v'jettons, v'price) = v;
+    build_0 = build_0.store_int(v'jettons, 257);
+    build_0 = build_0.store_int(v'price, 257);
+    return build_0;
+}
+
+cell $Level$_store_cell((int, int) v) inline {
+    return $Level$_store(begin_cell(), v).end_cell();
+}
+
 (slice, ((int, int))) $Level$_load(slice sc_0) inline {
     var v'jettons = sc_0~load_int(257);
     var v'price = sc_0~load_int(257);
@@ -102,6 +113,10 @@ tuple $Level$_load_opt(cell cl) inline {
     throw_if(128, null?(v));
     var (int vvv'jettons, int vvv'price) = __tact_tuple_destroy_2(v);
     return (vvv'jettons, vvv'price);
+}
+
+((int, int)) $Level$_constructor_jettons_price(int $jettons, int $price) inline {
+    return ($jettons, $price);
 }
 
 ;;
@@ -134,6 +149,27 @@ tuple $Level$_load_opt(cell cl) inline {
     var v'sender = sc_0~__tact_load_address();
     var v'amount = sc_0~load_coins();
     return (sc_0, (v'wallet, v'sender, v'amount));
+}
+
+;;
+;; Type: AddVots
+;; Header: 0xeca2354f
+;; TLB: add_vots#eca2354f amount:coins = AddVots
+;;
+
+builder $AddVots$_store(builder build_0, (int) v) inline {
+    var (v'amount) = v;
+    build_0 = store_uint(build_0, 3970053455, 32);
+    build_0 = build_0.store_coins(v'amount);
+    return build_0;
+}
+
+cell $AddVots$_store_cell((int) v) inline {
+    return $AddVots$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $AddVots$_constructor_amount(int $amount) inline {
+    return ($amount);
 }
 
 ;;

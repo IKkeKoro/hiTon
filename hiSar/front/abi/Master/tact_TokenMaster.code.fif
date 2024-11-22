@@ -9,6 +9,7 @@ PROGRAM{
   DECLPROC __tact_context_get
   DECLPROC __tact_context_get_sender
   DECLPROC __tact_store_bool
+  DECLPROC __tact_dict_set_int_cell
   DECLPROC __tact_dict_get_int_cell
   DECLPROC __tact_slice_eq_bits
   DECLPROC __tact_dict_set_code
@@ -16,11 +17,15 @@ PROGRAM{
   DECLPROC $Deploy$_load
   DECLPROC $DeployOk$_store
   DECLPROC $DeployOk$_store_cell
+  DECLPROC $Level$_store
+  DECLPROC $Level$_store_cell
   DECLPROC $Level$_load
   DECLPROC $Level$_as_optional
   DECLPROC $Level$_load_opt
   DECLPROC $Transfer$_load
   DECLPROC $CheckWallet$_load
+  DECLPROC $AddVots$_store
+  DECLPROC $AddVots$_store_cell
   DECLPROC $CheckSupply$_load
   DECLPROC $ChangeOwner$_load
   DECLPROC $UpdateSubscribe$_store
@@ -51,6 +56,7 @@ PROGRAM{
   DECLPROC $TokenWallet$init$_store
   DECLPROC $MembersPool$init$_store
   DECLPROC $TokenMaster$init$_load
+  DECLPROC $Level$_constructor_jettons_price
   DECLPROC $TokenMaster$_contract_init
   DECLPROC $TokenMaster$_contract_load
   DECLPROC $TokenMaster$_contract_store
@@ -72,6 +78,7 @@ PROGRAM{
   DECLPROC $UpdateSubscribe$_constructor_jettons_price
   DECLPROC $SendParameters$_constructor_to_value_mode_body
   DECLPROC $TakeWalletAddress$_constructor_query_id_wallet_address_owner_address
+  DECLPROC $AddVots$_constructor_amount
   DECLPROC $Validate$_constructor_wallet_sender_amount
   DECLPROC $Excesses$_constructor_query_id
   DECLPROC $SendIncome$_constructor_totalSupply_poolWithdrawnAt_totalVoted_wallet
@@ -185,6 +192,19 @@ PROGRAM{
     SWAP
     1 STI
   }>
+  __tact_dict_set_int_cell PROCINLINE:<{
+    DUP
+    ISNULL
+    IF:<{
+      DROP
+      -ROT
+      DICTIDEL
+      DROP
+    }>ELSE<{
+      s1 s3 s3 XCHG3
+      DICTISETREF
+    }>
+  }>
   __tact_dict_get_int_cell PROCINLINE:<{
     -ROT
     DICTIGETREF
@@ -229,6 +249,19 @@ PROGRAM{
     NEWC
     SWAP
     $DeployOk$_store INLINECALLDICT
+    ENDC
+  }>
+  $Level$_store PROCINLINE:<{
+    s0 s2 XCHG
+    257 PUSHINT
+    STIX
+    257 PUSHINT
+    STIX
+  }>
+  $Level$_store_cell PROCINLINE:<{
+    NEWC
+    -ROT
+    $Level$_store INLINECALLDICT
     ENDC
   }>
   $Level$_load PROCINLINE:<{
@@ -293,6 +326,19 @@ PROGRAM{
     SWAP
     LDVARUINT16
     3 -ROLL
+  }>
+  $AddVots$_store PROCINLINE:<{
+    3970053455 PUSHINT
+    ROT
+    32 STU
+    SWAP
+    STVARUINT16
+  }>
+  $AddVots$_store_cell PROCINLINE:<{
+    NEWC
+    SWAP
+    $AddVots$_store INLINECALLDICT
+    ENDC
   }>
   $CheckSupply$_load PROCINLINE:<{
     32 LDU
@@ -537,11 +583,48 @@ PROGRAM{
     LDREF
     -ROT
   }>
+  $Level$_constructor_jettons_price PROCINLINE:<{
+  }>
   $TokenMaster$_contract_init PROCREF:<{
     0 PUSHINT
     TRUE
-    2SWAP
     PUSHNULL
+    257 PUSHINT
+    s3 PUSH
+    100000000000 PUSHINT
+    100000000 PUSHINT
+    $Level$_constructor_jettons_price INLINECALLDICT
+    $Level$_store_cell INLINECALLDICT
+    __tact_dict_set_int_cell INLINECALLDICT
+    257 PUSHINT
+    1 PUSHINT
+    300000000000 PUSHINT
+    300000000 PUSHINT
+    $Level$_constructor_jettons_price INLINECALLDICT
+    $Level$_store_cell INLINECALLDICT
+    __tact_dict_set_int_cell INLINECALLDICT
+    257 PUSHINT
+    2 PUSHINT
+    500000000000 PUSHINT
+    500000000 PUSHINT
+    $Level$_constructor_jettons_price INLINECALLDICT
+    $Level$_store_cell INLINECALLDICT
+    __tact_dict_set_int_cell INLINECALLDICT
+    257 PUSHINT
+    3 PUSHINT
+    1000000000000 PUSHINT
+    1000000000 PUSHINT
+    $Level$_constructor_jettons_price INLINECALLDICT
+    $Level$_store_cell INLINECALLDICT
+    __tact_dict_set_int_cell INLINECALLDICT
+    257 PUSHINT
+    4 PUSHINT
+    4000000000000 PUSHINT
+    3000000000 PUSHINT
+    $Level$_constructor_jettons_price INLINECALLDICT
+    $Level$_store_cell INLINECALLDICT
+    __tact_dict_set_int_cell INLINECALLDICT
+    s4 s3 s0 XCHG3
   }>
   $TokenMaster$_contract_load PROCREF:<{
     c4 PUSH
@@ -845,6 +928,8 @@ PROGRAM{
   }>
   $TakeWalletAddress$_constructor_query_id_wallet_address_owner_address PROCINLINE:<{
   }>
+  $AddVots$_constructor_amount PROCINLINE:<{
+  }>
   $Validate$_constructor_wallet_sender_amount PROCINLINE:<{
   }>
   $Excesses$_constructor_query_id PROCINLINE:<{
@@ -950,6 +1035,8 @@ PROGRAM{
     $Context$_fun_readForwardFee INLINECALLDICT
     s6 s(-1) PUXC
     ADD
+    100000000 PUSHINT
+    ADD
     GEQ
     THROWANYIFNOT
     s9 s4 XCPU
@@ -962,8 +1049,16 @@ PROGRAM{
     20 PUSHINT
     DIV
     ADD
+    s3 PUSH
+    10 PUSHINT
+    DIV
+    s4 PUSH
+    20 PUSHINT
+    DIV
+    ADD
+    100000000 PUSHINT
+    ADD
     0 PUSHINT
-    64 PUSHINT
     s0 s6 XCHG
     FALSE
     s0 s6 XCHG
@@ -1028,6 +1123,16 @@ PROGRAM{
     s0 s3 PUXC
     __tact_slice_eq_bits INLINECALLDICT
     IF:<{
+      50000000 PUSHINT
+      0 PUSHINT
+      s2 PUSH
+      $AddVots$_constructor_amount INLINECALLDICT
+      $AddVots$_store_cell INLINECALLDICT
+      s5 PUSH
+      3 -ROLL
+      $SendParameters$_constructor_to_value_mode_body INLINECALLDICT
+      $global_send INLINECALLDICT
+      DROP
       __tact_context_get_sender INLINECALLDICT
       0 PUSHINT
       s4 s3 XCHG2

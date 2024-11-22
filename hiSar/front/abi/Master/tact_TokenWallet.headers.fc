@@ -52,7 +52,7 @@ cell $RefIncome$_store_cell((int, slice, int, int) v) inline;
 (slice, ((int, slice, int, int))) $RefIncome$_load(slice sc_0) inline;
 
 ;; $AddVots$_load
-(slice, ((slice, int))) $AddVots$_load(slice sc_0) inline;
+(slice, ((int))) $AddVots$_load(slice sc_0) inline;
 
 ;; $CheckSupply$_store
 builder $CheckSupply$_store(builder build_0, (int, slice, int) v) inline;
@@ -124,7 +124,10 @@ _ $StateInit$_get_code((cell, cell) v) inline;
 _ $Context$_get_sender((int, slice, int, slice) v) inline;
 
 ;; $WalletData$_to_external
-(int, slice, slice, cell, int, slice, int) $WalletData$_to_external(((int, slice, slice, cell, int, slice, int)) v) inline;
+(int, slice, slice, cell) $WalletData$_to_external(((int, slice, slice, cell)) v) inline;
+
+;; $MemberData$_to_external
+(int, int, int, int, slice, int) $MemberData$_to_external(((int, int, int, int, slice, int)) v) inline;
 
 ;; $TokenWallet$init$_store
 builder $TokenWallet$init$_store(builder build_0, (slice, slice) v) inline;
@@ -156,11 +159,17 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $TokenWallet$_init_child
 (cell, cell) $TokenWallet$_init_child(cell sys', slice $owner, slice $master) inline_ref;
 
-;; $WalletData$_constructor_balance_poolWithdrawnAt_totalVoted_inviter_owner_master_code
-((int, slice, slice, cell, int, slice, int)) $WalletData$_constructor_balance_poolWithdrawnAt_totalVoted_inviter_owner_master_code(int $balance, int $poolWithdrawnAt, int $totalVoted, slice $inviter, slice $owner, slice $master, cell $code) inline;
+;; $WalletData$_constructor_balance_owner_master_code
+((int, slice, slice, cell)) $WalletData$_constructor_balance_owner_master_code(int $balance, slice $owner, slice $master, cell $code) inline;
 
 ;; $TokenWallet$_fun_get_wallet_data
-((int, slice, slice, int, int, int, slice, int, int), (int, slice, slice, cell, int, slice, int)) $TokenWallet$_fun_get_wallet_data((int, slice, slice, int, int, int, slice, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, slice, int, int), (int, slice, slice, cell)) $TokenWallet$_fun_get_wallet_data((int, slice, slice, int, int, int, slice, int, int) $self) impure inline_ref;
+
+;; $MemberData$_constructor_totalVoted_lastClaimed_subscribedUntil_jettonsToClaim_inviter_poolWithdrawnAt
+((int, int, int, int, slice, int)) $MemberData$_constructor_totalVoted_lastClaimed_subscribedUntil_jettonsToClaim_inviter_poolWithdrawnAt(int $totalVoted, int $lastClaimed, int $subscribedUntil, int $jettonsToClaim, slice $inviter, int $poolWithdrawnAt) inline;
+
+;; $TokenWallet$_fun_memberData
+((int, slice, slice, int, int, int, slice, int, int), (int, int, int, int, slice, int)) $TokenWallet$_fun_memberData((int, slice, slice, int, int, int, slice, int, int) $self) impure inline_ref;
 
 ;; $MembersPool$_init_child
 (cell, cell) $MembersPool$_init_child(cell sys', slice $master) inline_ref;
@@ -186,11 +195,11 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $BurnNotification$_constructor_query_id_amount_sender_response_destination
 ((int, int, slice, slice)) $BurnNotification$_constructor_query_id_amount_sender_response_destination(int $query_id, int $amount, slice $sender, slice $response_destination) inline;
 
-;; $RefIncome$_constructor_income_sender_amount_counter
-((int, slice, int, int)) $RefIncome$_constructor_income_sender_amount_counter(int $income, slice $sender, int $amount, int $counter) inline;
-
 ;; $SendParameters$_constructor_to_value_mode_body_data_code
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_body_data_code(slice $to, int $value, int $mode, cell $body, cell $data, cell $code) inline;
+
+;; $RefIncome$_constructor_income_sender_amount_counter
+((int, slice, int, int)) $RefIncome$_constructor_income_sender_amount_counter(int $income, slice $sender, int $amount, int $counter) inline;
 
 ;; $CheckSupply$_constructor_sender_poolWithdrawnAt_totalVoted
 ((int, slice, int)) $CheckSupply$_constructor_sender_poolWithdrawnAt_totalVoted(slice $sender, int $poolWithdrawnAt, int $totalVoted) inline;

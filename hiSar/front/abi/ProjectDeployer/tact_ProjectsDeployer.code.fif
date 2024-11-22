@@ -64,10 +64,10 @@ PROGRAM{
   DECLPROC $SendParameters$_constructor_to_value_mode_body_data_code
   DECLPROC $ChangeStage$_constructor_stage
   DECLPROC $ChangeActive$_constructor_active
+  DECLPROC $NewProject$_constructor_address_id_data_owner_required_percents
   DECLPROC $DeployProject$_constructor_owner_data_required_percents
-  DECLPROC $NewProject$_constructor_address_id
+  DECLPROC $NewDonation$_constructor_address_id_owner_data
   DECLPROC $DeployDonation$_constructor_owner_data
-  DECLPROC $NewDonation$_constructor_address_id
   DECLPROC $DeployOk$_constructor_queryId
   DECLPROC %$ProjectsDeployer$_internal_empty
   DECLPROC $ProjectsDeployer$_internal_binary_ChangeOwner
@@ -279,31 +279,49 @@ PROGRAM{
     $DeployDonation$_store INLINECALLDICT
     ENDC
   }>
-  $NewProject$_store PROCINLINE:<{
-    814799246 PUSHINT
-    s0 s3 XCHG2
+  $NewProject$_store PROCREF:<{
+    1463093253 PUSHINT
+    s0 s10 XCHG2
     32 STU
-    SWAP
+    s0 s8 XCHG2
     __tact_store_address INLINECALLDICT
+    s1 s6 XCHG
     64 STU
+    NEWC
+    4 2 BLKSWAP
+    $Data$_store INLINECALLDICT
+    ROT
+    __tact_store_address INLINECALLDICT
+    ROT
+    STVARUINT16
+    s1 s2 XCHG
+    STDICT
+    ENDC
+    SWAP
+    STREF
   }>
   $NewProject$_store_cell PROCINLINE:<{
     NEWC
-    -ROT
+    9 -ROLL
     $NewProject$_store INLINECALLDICT
     ENDC
   }>
   $NewDonation$_store PROCINLINE:<{
-    460158014 PUSHINT
-    s0 s3 XCHG2
+    3359593827 PUSHINT
+    s0 s8 XCHG2
     32 STU
-    SWAP
+    s0 s6 XCHG2
     __tact_store_address INLINECALLDICT
+    s1 s4 XCHG
     64 STU
+    ROT
+    __tact_store_address INLINECALLDICT
+    s3 s4 XCHG2
+    $Data$_store INLINECALLDICT
   }>
   $NewDonation$_store_cell PROCINLINE:<{
     NEWC
-    -ROT
+    7 -ROLL
     $NewDonation$_store INLINECALLDICT
     ENDC
   }>
@@ -722,7 +740,7 @@ PROGRAM{
     SWAP
   }>
   $ProjectsDeployer$_fun_data PROCREF:<{
-        B{b5ee9c72410101010024000043800f8956fc49fb2da4a08c75f9f4e709b495566a7dc2712272dd6d20373a7a85ed30894c4479} B>boc <s PUSHSLICE
+        B{b5ee9c72410101010024000043800eccf90a15cccffb582a7f018db440b3df02b4bcbb105b9d822091b618b0de4b30e7777fd8} B>boc <s PUSHSLICE
         BALANCE FIRST
     s4 PUSH
     s7 s2 s(-1) PUXC2
@@ -792,15 +810,15 @@ PROGRAM{
   }>
   $ChangeActive$_constructor_active PROCINLINE:<{
   }>
+  $NewProject$_constructor_address_id_data_owner_required_percents PROCINLINE:<{
+  }>
   $DeployProject$_constructor_owner_data_required_percents PROCINLINE:<{
     6 ROLL
   }>
-  $NewProject$_constructor_address_id PROCINLINE:<{
+  $NewDonation$_constructor_address_id_owner_data PROCINLINE:<{
   }>
   $DeployDonation$_constructor_owner_data PROCINLINE:<{
     4 ROLL
-  }>
-  $NewDonation$_constructor_address_id PROCINLINE:<{
   }>
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
@@ -905,6 +923,8 @@ PROGRAM{
     $Context$_fun_readForwardFee INLINECALLDICT
     s10 s(-1) PUXC
     ADD
+    200000000 PUSHINT
+    ADD
     GREATER
     THROWANYIFNOT
     __tact_context_sys GETGLOB
@@ -951,58 +971,65 @@ PROGRAM{
     SWAP
     __tact_dict_get_int_int INLINECALLDICT
     __tact_not_null INLINECALLDICT
-    5 GTINT
+    0 GTINT
+    IF:<{
+      257 PUSHINT
+      s6 s(-1) s(-1) PUXCPU
+      1 PUSHINT
+      SWAP
+      __tact_dict_get_int_int INLINECALLDICT
+      __tact_not_null INLINECALLDICT
+      0 GTINT
+    }>ELSE<{
+      FALSE
+    }>
+    IF:<{
+      257 PUSHINT
+      s6 s(-1) s(-1) PUXCPU
+      2 PUSHINT
+      SWAP
+      __tact_dict_get_int_int INLINECALLDICT
+      __tact_not_null INLINECALLDICT
+      0 GTINT
+    }>ELSE<{
+      FALSE
+    }>
+    IF:<{
+      257 PUSHINT
+      s6 s(-1) s(-1) PUXCPU
+      3 PUSHINT
+      SWAP
+      __tact_dict_get_int_int INLINECALLDICT
+      __tact_not_null INLINECALLDICT
+      0 GTINT
+    }>ELSE<{
+      FALSE
+    }>
     THROWANYIFNOT
-    44024 PUSHINT
-    257 PUSHINT
-    s6 s(-1) s(-1) PUXCPU
-    1 PUSHINT
-    SWAP
-    __tact_dict_get_int_int INLINECALLDICT
-    __tact_not_null INLINECALLDICT
-    5 GTINT
-    THROWANYIFNOT
-    44024 PUSHINT
-    257 PUSHINT
-    s6 s(-1) s(-1) PUXCPU
-    2 PUSHINT
-    SWAP
-    __tact_dict_get_int_int INLINECALLDICT
-    __tact_not_null INLINECALLDICT
-    20 GTINT
-    THROWANYIFNOT
-    44024 PUSHINT
-    257 PUSHINT
-    s6 s(-1) s(-1) PUXCPU
-    3 PUSHINT
-    SWAP
-    __tact_dict_get_int_int INLINECALLDICT
-    __tact_not_null INLINECALLDICT
-    20 GTINT
-    THROWANYIFNOT
+    s0 s14 s9 PUSH3
+    s11 s10 s9 PUSH3
+    s9 s11 s10 PUSH3
+    $NewProject$_constructor_address_id_data_owner_required_percents INLINECALLDICT
+    $NewProject$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
+    s0 s14 XCHG
+    INC
     s3 s4 XCHG
     s3 s9 XCHG
     s8 s7 s0 XCHG3
-    0 PUSHINT
+    200000000 PUSHINT
     s7 s6 XCHG2
-    1 PUSHINT
+    0 PUSHINT
     s0 s11 XCHG
     $DeployProject$_constructor_owner_data_required_percents INLINECALLDICT
     $DeployProject$_store_cell INLINECALLDICT
-    s2 PUSH
-    s4 s1 s5 XCHG3
-    s3 s6 XCHG
-    s1 s2 XCHG
+    s5 s10 XCHG
+    s1 s4 XCHG
+    s3 s10 XCHG
+    s0 s10 s10 XCHG3
     $SendParameters$_constructor_to_value_mode_body_data_code INLINECALLDICT
     $global_send INLINECALLDICT
     DROP
-    s5 PUSH
-    $NewProject$_constructor_address_id INLINECALLDICT
-    $NewProject$_store_cell INLINECALLDICT
-    $global_emit INLINECALLDICT
-    s0 s4 XCHG
-    INC
-    s0 s4 XCHG
   }>
   $ProjectsDeployer$_internal_binary_CreateDonation PROCINLINE:<{
     61530 PUSHINT
@@ -1019,29 +1046,32 @@ PROGRAM{
     THROWANYIFNOT
     __tact_context_sys GETGLOB
         MYADDR
-    s11 PUSH
+    s10 PUSH
     $Donation$_init_child INLINECALLDICT
     2DUP
     $global_contractAddress INLINECALLDICT
+    s0 s11 s3 PUSH3
+    s10 s9 s8 PUSH3
+    s10 PUSH
+    $NewDonation$_constructor_address_id_owner_data INLINECALLDICT
+    $NewDonation$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
+    s0 s11 XCHG
+    INC
     s3 s7 s0 XCHG3
-    0 PUSHINT
+    200000000 PUSHINT
     s7 s6 XCHG2
-    1 PUSHINT
+    0 PUSHINT
     s0 s6 XCHG
     $DeployDonation$_constructor_owner_data INLINECALLDICT
     $DeployDonation$_store_cell INLINECALLDICT
-    s4 PUSH
-    s1 s6 s6 XCHG3
+    s5 s9 XCHG
+    s3 s4 XCHG
+    s0 s1 s3 XCHG3
+    s9 s9 XCHG2
     $SendParameters$_constructor_to_value_mode_body_data_code INLINECALLDICT
     $global_send INLINECALLDICT
     DROP
-    s4 PUSH
-    $NewDonation$_constructor_address_id INLINECALLDICT
-    $NewDonation$_store_cell INLINECALLDICT
-    $global_emit INLINECALLDICT
-    s0 s3 XCHG
-    INC
-    s0 s3 XCHG
   }>
   $ProjectsDeployer$_internal_binary_Deploy PROCINLINE:<{
     $DeployOk$_constructor_queryId INLINECALLDICT

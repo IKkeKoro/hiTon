@@ -12,7 +12,7 @@
 ;;
 
 (int, slice, int, slice, (slice, slice, slice, slice), int) $Donation$_contract_init(slice $deployer, int $id) impure inline_ref {
-    var (($self'donated, $self'deployer, $self'id, $self'owner, ($self'data'title, $self'data'description, $self'data'image, $self'data'link), $self'active)) = (0, null(), null(), null(), $Data$_constructor_title_description_image_link(__gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7(), __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7(), __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7(), __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7()), false);
+    var (($self'donated, $self'deployer, $self'id, $self'owner, ($self'data'title, $self'data'description, $self'data'image, $self'data'link), $self'active)) = (0, null(), null(), null(), $Data$_constructor_title_description_image_link(__gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7(), __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7(), __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7(), __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7()), true);
     $self'id = $id;
     $self'owner = $global_myAddress();
     $self'deployer = $deployer;
@@ -35,6 +35,7 @@
     throw_unless(57005, ( __tact_slice_eq_bits($self'deployer, __tact_context_get_sender()) ));
     ($self'data'title, $self'data'description, $self'data'image, $self'data'link) = ($msg'data'title, $msg'data'description, $msg'data'image, $msg'data'link);
     $self'owner = $msg'owner;
+    $global_emit($NewDonation$_store_cell($NewDonation$_constructor_address_id_owner_data($global_myAddress(), $self'id, $msg'owner, ($msg'data'title, $msg'data'description, $msg'data'image, $msg'data'link))));
     return (($self'donated, $self'deployer, $self'id, $self'owner, ($self'data'title, $self'data'description, $self'data'image, $self'data'link), $self'active), ());
 }
 

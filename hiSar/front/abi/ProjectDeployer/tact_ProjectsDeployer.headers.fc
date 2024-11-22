@@ -64,16 +64,16 @@ builder $DeployDonation$_store(builder build_0, ((slice, slice, slice, slice), s
 cell $DeployDonation$_store_cell(((slice, slice, slice, slice), slice) v) inline;
 
 ;; $NewProject$_store
-builder $NewProject$_store(builder build_0, (slice, int) v) inline;
+builder $NewProject$_store(builder build_0, (slice, int, (slice, slice, slice, slice), slice, int, cell) v) inline_ref;
 
 ;; $NewProject$_store_cell
-cell $NewProject$_store_cell((slice, int) v) inline;
+cell $NewProject$_store_cell((slice, int, (slice, slice, slice, slice), slice, int, cell) v) inline;
 
 ;; $NewDonation$_store
-builder $NewDonation$_store(builder build_0, (slice, int) v) inline;
+builder $NewDonation$_store(builder build_0, (slice, int, slice, (slice, slice, slice, slice)) v) inline;
 
 ;; $NewDonation$_store_cell
-cell $NewDonation$_store_cell((slice, int) v) inline;
+cell $NewDonation$_store_cell((slice, int, slice, (slice, slice, slice, slice)) v) inline;
 
 ;; $ChangeOwner$_load
 (slice, ((slice))) $ChangeOwner$_load(slice sc_0) inline;
@@ -198,17 +198,17 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $ChangeActive$_constructor_active
 ((int)) $ChangeActive$_constructor_active(int $active) inline;
 
+;; $NewProject$_constructor_address_id_data_owner_required_percents
+((slice, int, (slice, slice, slice, slice), slice, int, cell)) $NewProject$_constructor_address_id_data_owner_required_percents(slice $address, int $id, (slice, slice, slice, slice) $data, slice $owner, int $required, cell $percents) inline;
+
 ;; $DeployProject$_constructor_owner_data_required_percents
 (((slice, slice, slice, slice), int, cell, slice)) $DeployProject$_constructor_owner_data_required_percents(slice $owner, (slice, slice, slice, slice) $data, int $required, cell $percents) inline;
 
-;; $NewProject$_constructor_address_id
-((slice, int)) $NewProject$_constructor_address_id(slice $address, int $id) inline;
+;; $NewDonation$_constructor_address_id_owner_data
+((slice, int, slice, (slice, slice, slice, slice))) $NewDonation$_constructor_address_id_owner_data(slice $address, int $id, slice $owner, (slice, slice, slice, slice) $data) inline;
 
 ;; $DeployDonation$_constructor_owner_data
 (((slice, slice, slice, slice), slice)) $DeployDonation$_constructor_owner_data(slice $owner, (slice, slice, slice, slice) $data) inline;
-
-;; $NewDonation$_constructor_address_id
-((slice, int)) $NewDonation$_constructor_address_id(slice $address, int $id) inline;
 
 ;; $DeployOk$_constructor_queryId
 ((int)) $DeployOk$_constructor_queryId(int $queryId) inline;

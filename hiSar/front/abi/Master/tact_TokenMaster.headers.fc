@@ -33,6 +33,9 @@ slice __tact_context_get_sender() inline;
 ;; __tact_store_bool
 builder __tact_store_bool(builder b, int v) inline;
 
+;; __tact_dict_set_int_cell
+(cell, ()) __tact_dict_set_int_cell(cell d, int kl, int k, cell v) inline;
+
 ;; __tact_dict_get_int_cell
 cell __tact_dict_get_int_cell(cell d, int kl, int k) inline;
 
@@ -54,6 +57,12 @@ builder $DeployOk$_store(builder build_0, (int) v) inline;
 ;; $DeployOk$_store_cell
 cell $DeployOk$_store_cell((int) v) inline;
 
+;; $Level$_store
+builder $Level$_store(builder build_0, (int, int) v) inline;
+
+;; $Level$_store_cell
+cell $Level$_store_cell((int, int) v) inline;
+
 ;; $Level$_load
 (slice, ((int, int))) $Level$_load(slice sc_0) inline;
 
@@ -68,6 +77,12 @@ tuple $Level$_load_opt(cell cl) inline;
 
 ;; $CheckWallet$_load
 (slice, ((slice, slice, int))) $CheckWallet$_load(slice sc_0) inline;
+
+;; $AddVots$_store
+builder $AddVots$_store(builder build_0, (int) v) inline;
+
+;; $AddVots$_store_cell
+cell $AddVots$_store_cell((int) v) inline;
 
 ;; $CheckSupply$_load
 (slice, ((int, slice, int))) $CheckSupply$_load(slice sc_0) inline;
@@ -159,6 +174,9 @@ builder $MembersPool$init$_store(builder build_0, (slice) v) inline;
 ;; $TokenMaster$init$_load
 (slice, ((slice, cell))) $TokenMaster$init$_load(slice sc_0) inline;
 
+;; $Level$_constructor_jettons_price
+((int, int)) $Level$_constructor_jettons_price(int $jettons, int $price) inline;
+
 ;; $TokenMaster$_contract_init
 (int, int, slice, cell, cell) $TokenMaster$_contract_init(slice $owner, cell $jetton_content) impure inline_ref;
 
@@ -221,6 +239,9 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 
 ;; $TakeWalletAddress$_constructor_query_id_wallet_address_owner_address
 ((int, slice, slice)) $TakeWalletAddress$_constructor_query_id_wallet_address_owner_address(int $query_id, slice $wallet_address, slice $owner_address) inline;
+
+;; $AddVots$_constructor_amount
+((int)) $AddVots$_constructor_amount(int $amount) inline;
 
 ;; $Validate$_constructor_wallet_sender_amount
 ((slice, slice, int)) $Validate$_constructor_wallet_sender_amount(slice $wallet, slice $sender, int $amount) inline;

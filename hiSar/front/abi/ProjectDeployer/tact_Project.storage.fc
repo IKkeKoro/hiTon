@@ -55,6 +55,34 @@ builder $Data$_store(builder build_0, (slice, slice, slice, slice) v) inline {
 }
 
 ;;
+;; Type: NewProject
+;; Header: 0x57350805
+;; TLB: new_project#57350805 address:address id:uint64 data:Data{title:^string,description:^string,image:^string,link:^string} owner:address required:coins percents:dict<int, int> = NewProject
+;;
+
+builder $NewProject$_store(builder build_0, (slice, int, (slice, slice, slice, slice), slice, int, cell) v) inline_ref {
+    var (v'address, v'id, (v'data'title, v'data'description, v'data'image, v'data'link), v'owner, v'required, v'percents) = v;
+    build_0 = store_uint(build_0, 1463093253, 32);
+    build_0 = __tact_store_address(build_0, v'address);
+    build_0 = build_0.store_uint(v'id, 64);
+    var build_1 = begin_cell();
+    build_1 = $Data$_store(build_1, (v'data'title, v'data'description, v'data'image, v'data'link));
+    build_1 = __tact_store_address(build_1, v'owner);
+    build_1 = build_1.store_coins(v'required);
+    build_1 = build_1.store_dict(v'percents);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $NewProject$_store_cell((slice, int, (slice, slice, slice, slice), slice, int, cell) v) inline {
+    return $NewProject$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, (slice, slice, slice, slice), slice, int, cell)) $NewProject$_constructor_address_id_data_owner_required_percents(slice $address, int $id, (slice, slice, slice, slice) $data, slice $owner, int $required, cell $percents) inline {
+    return ($address, $id, $data, $owner, $required, $percents);
+}
+
+;;
 ;; Type: DeployProject
 ;; Header: 0x00af0154
 ;; TLB: deploy_project#00af0154 data:Data{title:^string,description:^string,image:^string,link:^string} required:coins percents:dict<int, int> owner:address = DeployProject
@@ -68,6 +96,27 @@ builder $Data$_store(builder build_0, (slice, slice, slice, slice) v) inline {
     var v'percents = sc_1~load_dict();
     var v'owner = sc_1~__tact_load_address();
     return (sc_0, (v'data, v'required, v'percents, v'owner));
+}
+
+;;
+;; Type: StageChanged
+;; Header: 0xa2d30f85
+;; TLB: stage_changed#a2d30f85 stage:uint8 = StageChanged
+;;
+
+builder $StageChanged$_store(builder build_0, (int) v) inline {
+    var (v'stage) = v;
+    build_0 = store_uint(build_0, 2731741061, 32);
+    build_0 = build_0.store_uint(v'stage, 8);
+    return build_0;
+}
+
+cell $StageChanged$_store_cell((int) v) inline {
+    return $StageChanged$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $StageChanged$_constructor_stage(int $stage) inline {
+    return ($stage);
 }
 
 ;;
@@ -119,14 +168,15 @@ cell $CheckWallet$_store_cell((slice, slice, int) v) inline {
 
 ;;
 ;; Type: AddIncome
-;; Header: 0x8f082edd
-;; TLB: add_income#8f082edd amount:coins = AddIncome
+;; Header: 0x3815f1a9
+;; TLB: add_income#3815f1a9 ownerPie:bool amount:coins = AddIncome
 ;;
 
-(slice, ((int))) $AddIncome$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 2399678173);
+(slice, ((int, int))) $AddIncome$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 940962217);
+    var v'ownerPie = sc_0~load_int(1);
     var v'amount = sc_0~load_coins();
-    return (sc_0, (v'amount));
+    return (sc_0, (v'ownerPie, v'amount));
 }
 
 ;;
@@ -172,16 +222,16 @@ cell $CheckWallet$_store_cell((slice, slice, int) v) inline {
 
 ;;
 ;; Type: ProjectData
-;; TLB: _ voted:coins invested:coins required:coins withdrawn:coins income:coins owner:address id:uint64 data:Data{title:^string,description:^string,image:^string,link:^string} = ProjectData
+;; TLB: _ voted:coins invested:coins required:coins withdrawn:coins income:coins owner:address id:uint64 stage:uint8 data:Data{title:^string,description:^string,image:^string,link:^string} = ProjectData
 ;;
 
-(int, int, int, int, int, slice, int, (slice, slice, slice, slice)) $ProjectData$_to_external(((int, int, int, int, int, slice, int, (slice, slice, slice, slice))) v) inline {
-    var (v'voted, v'invested, v'required, v'withdrawn, v'income, v'owner, v'id, v'data) = v; 
-    return (v'voted, v'invested, v'required, v'withdrawn, v'income, v'owner, v'id, v'data);
+(int, int, int, int, int, slice, int, int, (slice, slice, slice, slice)) $ProjectData$_to_external(((int, int, int, int, int, slice, int, int, (slice, slice, slice, slice))) v) inline {
+    var (v'voted, v'invested, v'required, v'withdrawn, v'income, v'owner, v'id, v'stage, v'data) = v; 
+    return (v'voted, v'invested, v'required, v'withdrawn, v'income, v'owner, v'id, v'stage, v'data);
 }
 
-((int, int, int, int, int, slice, int, (slice, slice, slice, slice))) $ProjectData$_constructor_voted_invested_required_withdrawn_income_owner_id_data(int $voted, int $invested, int $required, int $withdrawn, int $income, slice $owner, int $id, (slice, slice, slice, slice) $data) inline {
-    return ($voted, $invested, $required, $withdrawn, $income, $owner, $id, $data);
+((int, int, int, int, int, slice, int, int, (slice, slice, slice, slice))) $ProjectData$_constructor_voted_invested_required_withdrawn_income_owner_stage_id_data(int $voted, int $invested, int $required, int $withdrawn, int $income, slice $owner, int $stage, int $id, (slice, slice, slice, slice) $data) inline {
+    return ($voted, $invested, $required, $withdrawn, $income, $owner, $id, $stage, $data);
 }
 
 ;;
@@ -270,6 +320,28 @@ cell $AddInvest$_store_cell((int, int) v) inline {
 
 ((int, int)) $AddInvest$_constructor_invested_voted(int $invested, int $voted) inline {
     return ($invested, $voted);
+}
+
+;;
+;; Type: IncomeAdded
+;; Header: 0x27b62596
+;; TLB: income_added#27b62596 amount:coins from:address = IncomeAdded
+;;
+
+builder $IncomeAdded$_store(builder build_0, (int, slice) v) inline {
+    var (v'amount, v'from) = v;
+    build_0 = store_uint(build_0, 666248598, 32);
+    build_0 = build_0.store_coins(v'amount);
+    build_0 = __tact_store_address(build_0, v'from);
+    return build_0;
+}
+
+cell $IncomeAdded$_store_cell((int, slice) v) inline {
+    return $IncomeAdded$_store(begin_cell(), v).end_cell();
+}
+
+((int, slice)) $IncomeAdded$_constructor_amount_from(int $amount, slice $from) inline {
+    return ($amount, $from);
 }
 
 ;;

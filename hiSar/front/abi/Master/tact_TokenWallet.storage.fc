@@ -45,16 +45,30 @@ _ $Context$_get_sender((int, slice, int, slice) v) inline {
 
 ;;
 ;; Type: WalletData
-;; TLB: _ balance:int257 owner:address master:address code:^cell totalVoted:int257 inviter:address poolWithdrawnAt:int257 = WalletData
+;; TLB: _ balance:int257 owner:address master:address code:^cell = WalletData
 ;;
 
-(int, slice, slice, cell, int, slice, int) $WalletData$_to_external(((int, slice, slice, cell, int, slice, int)) v) inline {
-    var (v'balance, v'owner, v'master, v'code, v'totalVoted, v'inviter, v'poolWithdrawnAt) = v; 
-    return (v'balance, v'owner, v'master, v'code, v'totalVoted, v'inviter, v'poolWithdrawnAt);
+(int, slice, slice, cell) $WalletData$_to_external(((int, slice, slice, cell)) v) inline {
+    var (v'balance, v'owner, v'master, v'code) = v; 
+    return (v'balance, v'owner, v'master, v'code);
 }
 
-((int, slice, slice, cell, int, slice, int)) $WalletData$_constructor_balance_poolWithdrawnAt_totalVoted_inviter_owner_master_code(int $balance, int $poolWithdrawnAt, int $totalVoted, slice $inviter, slice $owner, slice $master, cell $code) inline {
-    return ($balance, $owner, $master, $code, $totalVoted, $inviter, $poolWithdrawnAt);
+((int, slice, slice, cell)) $WalletData$_constructor_balance_owner_master_code(int $balance, slice $owner, slice $master, cell $code) inline {
+    return ($balance, $owner, $master, $code);
+}
+
+;;
+;; Type: MemberData
+;; TLB: _ totalVoted:int257 lastClaimed:int257 subscribedUntil:int257 jettonsToClaim:int257 inviter:address poolWithdrawnAt:int257 = MemberData
+;;
+
+(int, int, int, int, slice, int) $MemberData$_to_external(((int, int, int, int, slice, int)) v) inline {
+    var (v'totalVoted, v'lastClaimed, v'subscribedUntil, v'jettonsToClaim, v'inviter, v'poolWithdrawnAt) = v; 
+    return (v'totalVoted, v'lastClaimed, v'subscribedUntil, v'jettonsToClaim, v'inviter, v'poolWithdrawnAt);
+}
+
+((int, int, int, int, slice, int)) $MemberData$_constructor_totalVoted_lastClaimed_subscribedUntil_jettonsToClaim_inviter_poolWithdrawnAt(int $totalVoted, int $lastClaimed, int $subscribedUntil, int $jettonsToClaim, slice $inviter, int $poolWithdrawnAt) inline {
+    return ($totalVoted, $lastClaimed, $subscribedUntil, $jettonsToClaim, $inviter, $poolWithdrawnAt);
 }
 
 ;;
@@ -110,15 +124,14 @@ cell $RefIncome$_store_cell((int, slice, int, int) v) inline {
 
 ;;
 ;; Type: AddVots
-;; Header: 0x88d365b8
-;; TLB: add_vots#88d365b8 sender:address amount:coins = AddVots
+;; Header: 0xeca2354f
+;; TLB: add_vots#eca2354f amount:coins = AddVots
 ;;
 
-(slice, ((slice, int))) $AddVots$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 2295555512);
-    var v'sender = sc_0~__tact_load_address();
+(slice, ((int))) $AddVots$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3970053455);
     var v'amount = sc_0~load_coins();
-    return (sc_0, (v'sender, v'amount));
+    return (sc_0, (v'amount));
 }
 
 ;;

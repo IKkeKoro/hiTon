@@ -14,7 +14,11 @@ PROGRAM{
   DECLPROC __tact_dict_get_code
   DECLPROC $Data$_store
   DECLPROC $Data$_load
+  DECLPROC $NewProject$_store
+  DECLPROC $NewProject$_store_cell
   DECLPROC $DeployProject$_load
+  DECLPROC $StageChanged$_store
+  DECLPROC $StageChanged$_store_cell
   DECLPROC $CheckWallet$_store
   DECLPROC $CheckWallet$_store_cell
   DECLPROC $ChangeStage$_load
@@ -31,6 +35,8 @@ PROGRAM{
   DECLPROC $Withdrawn$_store_cell
   DECLPROC $AddInvest$_store
   DECLPROC $AddInvest$_store_cell
+  DECLPROC $IncomeAdded$_store
+  DECLPROC $IncomeAdded$_store_cell
   DECLPROC $UserWithdraw$_load
   DECLPROC $GetIncome$_store
   DECLPROC $GetIncome$_store_cell
@@ -48,12 +54,15 @@ PROGRAM{
   DECLPROC $global_send
   DECLPROC $global_emit
   DECLPROC $Context$_fun_readForwardFee
-  DECLPROC $ProjectData$_constructor_voted_invested_required_withdrawn_income_owner_id_data
+  DECLPROC $ProjectData$_constructor_voted_invested_required_withdrawn_income_owner_stage_id_data
   DECLPROC $Project$_fun_projectData
   DECLPROC $UserData$_init_child
   DECLPROC $Project$_fun_userData
+  DECLPROC $NewProject$_constructor_address_id_data_owner_required_percents
+  DECLPROC $StageChanged$_constructor_stage
   DECLPROC $Withdrawn$_constructor_amount_from
   DECLPROC $SendParameters$_constructor_to_value_mode
+  DECLPROC $IncomeAdded$_constructor_amount_from
   DECLPROC $SendParameters$_constructor_to_value_mode_body
   DECLPROC $CheckWallet$_constructor_wallet_amount_sender
   DECLPROC $Voted$_constructor_amount_from
@@ -61,6 +70,7 @@ PROGRAM{
   DECLPROC $AddInvest$_constructor_invested_voted
   DECLPROC $Invested$_constructor_amount_from
   DECLPROC $GetIncome$_constructor_income_withdrawnAt
+  DECLPROC %$Project$_internal_empty
   DECLPROC $Project$_internal_binary_DeployProject
   DECLPROC $Project$_internal_binary_ChangeStage
   DECLPROC $Project$_internal_binary_OwnerWithdraw
@@ -232,6 +242,33 @@ PROGRAM{
     s2 s4 XCHG
     s2 s3 XCHG
   }>
+  $NewProject$_store PROCREF:<{
+    1463093253 PUSHINT
+    s0 s10 XCHG2
+    32 STU
+    s0 s8 XCHG2
+    __tact_store_address INLINECALLDICT
+    s1 s6 XCHG
+    64 STU
+    NEWC
+    4 2 BLKSWAP
+    $Data$_store INLINECALLDICT
+    ROT
+    __tact_store_address INLINECALLDICT
+    ROT
+    STVARUINT16
+    s1 s2 XCHG
+    STDICT
+    ENDC
+    SWAP
+    STREF
+  }>
+  $NewProject$_store_cell PROCINLINE:<{
+    NEWC
+    9 -ROLL
+    $NewProject$_store INLINECALLDICT
+    ENDC
+  }>
   $DeployProject$_load PROCINLINE:<{
     32 LDU
     SWAP
@@ -250,6 +287,18 @@ PROGRAM{
     s5 s6 XCHG
     s4 s5 XCHG
     s3 s4 XCHG
+  }>
+  $StageChanged$_store PROCINLINE:<{
+    2731741061 PUSHINT
+    ROT
+    32 STU
+    8 STU
+  }>
+  $StageChanged$_store_cell PROCINLINE:<{
+    NEWC
+    SWAP
+    $StageChanged$_store INLINECALLDICT
+    ENDC
   }>
   $CheckWallet$_store PROCINLINE:<{
     2217665637 PUSHINT
@@ -289,11 +338,12 @@ PROGRAM{
   $AddIncome$_load PROCINLINE:<{
     32 LDU
     SWAP
-    2399678173 PUSHINT
+    940962217 PUSHINT
     EQUAL
     129 THROWIFNOT
+    1 LDI
     LDVARUINT16
-    SWAP
+    -ROT
   }>
   $TransferNotification$_load PROCINLINE:<{
     32 LDU
@@ -386,6 +436,21 @@ PROGRAM{
     NEWC
     -ROT
     $AddInvest$_store INLINECALLDICT
+    ENDC
+  }>
+  $IncomeAdded$_store PROCINLINE:<{
+    666248598 PUSHINT
+    s0 s3 XCHG2
+    32 STU
+    SWAP
+    STVARUINT16
+    SWAP
+    __tact_store_address INLINECALLDICT
+  }>
+  $IncomeAdded$_store_cell PROCINLINE:<{
+    NEWC
+    -ROT
+    $IncomeAdded$_store INLINECALLDICT
     ENDC
   }>
   $UserWithdraw$_load PROCINLINE:<{
@@ -676,17 +741,19 @@ PROGRAM{
     3 MULCONST
     1 RSHIFT#
   }>
-  $ProjectData$_constructor_voted_invested_required_withdrawn_income_owner_id_data PROCINLINE:<{
+  $ProjectData$_constructor_voted_invested_required_withdrawn_income_owner_stage_id_data PROCINLINE:<{
+    s4 s5 XCHG
   }>
   $Project$_fun_projectData PROCREF:<{
     s6 s5 s4 PUSH3
     s6 s5 s14 PUSH3
+    s7 PUSH
+    19 s() PUSH
     18 s() PUSH
-    17 s() PUSH
-    17 s() PUSH
-    17 s() PUSH
-    17 s() PUSH
-    $ProjectData$_constructor_voted_invested_required_withdrawn_income_owner_id_data INLINECALLDICT
+    18 s() PUSH
+    18 s() PUSH
+    18 s() PUSH
+    $ProjectData$_constructor_voted_invested_required_withdrawn_income_owner_stage_id_data INLINECALLDICT
   }>
   $UserData$_init_child PROCREF:<{
     s0 s3 XCHG
@@ -729,6 +796,10 @@ PROGRAM{
     $UserData$_init_child INLINECALLDICT
     $global_contractAddress INLINECALLDICT
   }>
+  $NewProject$_constructor_address_id_data_owner_required_percents PROCINLINE:<{
+  }>
+  $StageChanged$_constructor_stage PROCINLINE:<{
+  }>
   $Withdrawn$_constructor_amount_from PROCINLINE:<{
   }>
   $SendParameters$_constructor_to_value_mode PROCINLINE:<{
@@ -737,6 +808,8 @@ PROGRAM{
     PUSHNULL
     PUSHNULL
     PUSHNULL
+  }>
+  $IncomeAdded$_constructor_amount_from PROCINLINE:<{
   }>
   $SendParameters$_constructor_to_value_mode_body PROCINLINE:<{
     TRUE
@@ -759,6 +832,18 @@ PROGRAM{
   }>
   $GetIncome$_constructor_income_withdrawnAt PROCINLINE:<{
   }>
+  %$Project$_internal_empty PROCINLINE:<{
+    __tact_context_get INLINECALLDICT
+    $Context$_get_value INLINECALLDICT
+    __tact_context_get INLINECALLDICT
+    $Context$_fun_readForwardFee INLINECALLDICT
+    SUB
+    10000000 PUSHINT
+    SUB
+    s1 s3 XCHG
+    ADD
+    s0 s2 XCHG
+  }>
   $Project$_internal_binary_DeployProject PROCINLINE:<{
     s7 POP
     s10 POP
@@ -772,12 +857,27 @@ PROGRAM{
     s15 s(-1) PUXC
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
-    s0 s11 XCHG
-    s0 s10 XCHG
-    s0 s9 XCHG
-    s0 s8 XCHG
+    s11 s10 s9 PUSH3
+    s11 s10 s7 PUSH3
+    s6 PUSH
+        MYADDR
     s0 s7 XCHG
-    s0 s4 XCHG
+    20 s() PUSH
+    s0 s7 XCHG
+    s6 20 s() XCHG
+    s5 19 s() XCHG
+    s4 18 s() XCHG
+    s3 17 s() XCHG
+    s2 s9 XCHG
+    s1 16 s() XCHG
+    s0 s13 XCHG
+    $NewProject$_constructor_address_id_data_owner_required_percents INLINECALLDICT
+    $NewProject$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
+    s0 s11 XCHG
+    s7 s10 XCHG
+    s4 s9 XCHG
+    s0 s8 XCHG
   }>
   $Project$_internal_binary_ChangeStage PROCINLINE:<{
     s2 POP
@@ -786,6 +886,10 @@ PROGRAM{
     s15 s(-1) PUXC
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
+    OVER
+    $StageChanged$_constructor_stage INLINECALLDICT
+    $StageChanged$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
   }>
   $Project$_internal_binary_OwnerWithdraw PROCINLINE:<{
     61739 PUSHINT
@@ -826,23 +930,57 @@ PROGRAM{
     ADD
     GEQ
     THROWANYIFNOT
-    s1 s3 XCHG
-    ADD
+    257 PUSHINT
+    s3 s(-1) s(-1) PUXCPU
+    0 PUSHINT
+    SWAP
+    __tact_dict_get_int_int INLINECALLDICT
+    __tact_not_null INLINECALLDICT
+    DROP
+    257 PUSHINT
+    s3 s(-1) s(-1) PUXCPU
+    1 PUSHINT
+    SWAP
+    __tact_dict_get_int_int INLINECALLDICT
+    __tact_not_null INLINECALLDICT
+    s1 s(-1) PUXC
+    MUL
+    100 PUSHINT
+    DIV
     s0 s2 XCHG
+    NOT
+    IF:<{
+      s4 s1 XCPU
+      ADD
+      s0 s4 XCHG
+    }>
+    s4 s4 XCPU
+    ADD
+    __tact_context_get_sender INLINECALLDICT
+    s1 s5 XCHG
+    $IncomeAdded$_constructor_amount_from INLINECALLDICT
+    $IncomeAdded$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
+    s14 s(-1) PUXC
+    0 PUSHINT
+    $SendParameters$_constructor_to_value_mode INLINECALLDICT
+    $global_send INLINECALLDICT
+    DROP
   }>
   $Project$_internal_binary_TransferNotification PROCINLINE:<{
     DROP
     s2 POP
-    61739 PUSHINT
-    __tact_context_get_sender INLINECALLDICT
-    s3 s(-1) PUXC
-    __tact_slice_eq_bits INLINECALLDICT
-    THROWANYIFNOT
     44871 PUSHINT
     s4 PUSH
     1 EQINT
     THROWANYIFNOT
-        B{b5ee9c72410101010024000043800f8956fc49fb2da4a08c75f9f4e709b495566a7dc2712272dd6d20373a7a85ed30894c4479} B>boc <s PUSHSLICE
+    48540 PUSHINT
+    __tact_context_get INLINECALLDICT
+    $Context$_get_value INLINECALLDICT
+    100000000 PUSHINT
+    GEQ
+    THROWANYIFNOT
+        B{b5ee9c72410101010024000043800eccf90a15cccffb582a7f018db440b3df02b4bcbb105b9d822091b618b0de4b30e7777fd8} B>boc <s PUSHSLICE
     0 PUSHINT
     64 PUSHINT
     __tact_context_get_sender INLINECALLDICT
@@ -857,10 +995,14 @@ PROGRAM{
   $Project$_internal_binary_Validate PROCINLINE:<{
     DROP
     61739 PUSHINT
-        B{b5ee9c72410101010024000043800f8956fc49fb2da4a08c75f9f4e709b495566a7dc2712272dd6d20373a7a85ed30894c4479} B>boc <s PUSHSLICE
+        B{b5ee9c72410101010024000043800eccf90a15cccffb582a7f018db440b3df02b4bcbb105b9d822091b618b0de4b30e7777fd8} B>boc <s PUSHSLICE
     __tact_context_get_sender INLINECALLDICT
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
+    s0 s1 PUSH2
+    $Voted$_constructor_amount_from INLINECALLDICT
+    $Voted$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
     s8 s8 XCPU
     ADD
     s6 PUSH
@@ -868,28 +1010,29 @@ PROGRAM{
     s1 s(-1) PUXC
     GEQ
     IF:<{
+      s3 POP
       2 PUSHINT
-      s4 POP
+      DUP
+      $StageChanged$_constructor_stage INLINECALLDICT
+      $StageChanged$_store_cell INLINECALLDICT
+      $global_emit INLINECALLDICT
+      s0 s3 XCHG
     }>
     __tact_context_sys GETGLOB
-    s2 s15 PUSH2
-    18 s() PUSH
+    s0 s2 s15 XC2PU
+    17 s() PUSH
     $UserData$_init_child INLINECALLDICT
     2DUP
     $global_contractAddress INLINECALLDICT
-    s11 s4 PUXC
-    $Voted$_constructor_amount_from INLINECALLDICT
-    $Voted$_store_cell INLINECALLDICT
-    $global_emit INLINECALLDICT
     0 PUSHINT
     DUP
     64 PUSHINT
     s0 s13 XCHG
     $AddInvest$_constructor_invested_voted INLINECALLDICT
     $AddInvest$_store_cell INLINECALLDICT
-    s1 s4 XCHG
+    s5 s4 s0 XCHG3
     s3 s12 XCHG
-    s12 s2 XCHG2
+    s0 s1 s12 XCHG3
     $SendParameters$_constructor_to_value_mode_body_code_data INLINECALLDICT
     $global_send INLINECALLDICT
     DROP
@@ -906,6 +1049,8 @@ PROGRAM{
     $Context$_fun_readForwardFee INLINECALLDICT
     s3 s(-1) PUXC
     ADD
+    50000000 PUSHINT
+    ADD
     GEQ
     THROWANYIFNOT
     s6 s6 XCPU
@@ -913,8 +1058,13 @@ PROGRAM{
     s0 s5 PUSH2
     GEQ
     IF:<{
+      s2 POP
       3 PUSHINT
-      s3 POP
+      DUP
+      $StageChanged$_constructor_stage INLINECALLDICT
+      $StageChanged$_store_cell INLINECALLDICT
+      $global_emit INLINECALLDICT
+      s0 s2 XCHG
     }>
     __tact_context_sys GETGLOB
     __tact_context_get_sender INLINECALLDICT
@@ -928,9 +1078,9 @@ PROGRAM{
     $Invested$_constructor_amount_from INLINECALLDICT
     $Invested$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
+    50000000 PUSHINT
     0 PUSHINT
-    1 PUSHINT
-    s11 s1 XCPU
+    s11 s11 XCPU
     $AddInvest$_constructor_invested_voted INLINECALLDICT
     $AddInvest$_store_cell INLINECALLDICT
     s5 s4 s0 XCHG3
@@ -1016,8 +1166,8 @@ PROGRAM{
   %projectData PROC:<{
     $Project$_contract_load INLINECALLDICT
     $Project$_fun_projectData INLINECALLDICT
-    11 11 BLKDROP2
-    3 11 BLKDROP2
+    12 12 BLKDROP2
+    2 12 BLKDROP2
     $ProjectData$_to_external INLINECALLDICT
   }>
   %userData PROC:<{
@@ -1047,6 +1197,17 @@ PROGRAM{
       DROP
       DUP
       32 PLDU
+    }>
+    DUP
+    0 EQINT
+    s2 PUSH
+    SBITS
+    33 LESSINT
+    AND
+    IFJMP:<{
+      2DROP
+      %$Project$_internal_empty INLINECALLDICT
+      TRUE
     }>
     DUP
     11469140 PUSHINT
@@ -1079,12 +1240,12 @@ PROGRAM{
       TRUE
     }>
     DUP
-    2399678173 PUSHINT
+    940962217 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
       $AddIncome$_load INLINECALLDICT
-      NIP
+      1 2 BLKDROP2
       $Project$_internal_binary_AddIncome INLINECALLDICT
       TRUE
     }>

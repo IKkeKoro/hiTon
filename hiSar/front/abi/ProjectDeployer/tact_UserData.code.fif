@@ -449,16 +449,6 @@ PROGRAM{
     ADD
     s3 s4 XCHG2
     ADD
-    __tact_context_get_sender INLINECALLDICT
-    0 PUSHINT
-    64 PUSHINT
-    __tact_context_get_sender INLINECALLDICT
-    s5 s4 s7 PUSH3
-    $UserWithdraw$_constructor_from_withdrawnAt_voted_invested INLINECALLDICT
-    $UserWithdraw$_store_cell INLINECALLDICT
-    $SendParameters$_constructor_to_value_mode_body INLINECALLDICT
-    $global_send INLINECALLDICT
-    DROP
     s0 s2 XCHG
   }>
   $UserData$_internal_binary_Withdraw PROCINLINE:<{

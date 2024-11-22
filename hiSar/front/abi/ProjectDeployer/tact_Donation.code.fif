@@ -13,6 +13,8 @@ PROGRAM{
   DECLPROC $Donate$_load
   DECLPROC $DonationEvent$_store
   DECLPROC $DonationEvent$_store_cell
+  DECLPROC $NewDonation$_store
+  DECLPROC $NewDonation$_store_cell
   DECLPROC $ChangeActive$_load
   DECLPROC $Donation$_store
   DECLPROC $Donation$_load
@@ -27,6 +29,7 @@ PROGRAM{
   DECLPROC $global_emit
   DECLPROC $DonationData$_constructor_donated_deployer_id_owner_data
   DECLPROC $Donation$_fun_donationData
+  DECLPROC $NewDonation$_constructor_address_id_owner_data
   DECLPROC $DonationEvent$_constructor_amount_from
   DECLPROC $SendParameters$_constructor_to_value_mode
   DECLPROC $Donation$_internal_binary_DeployDonation
@@ -172,6 +175,25 @@ PROGRAM{
     $DonationEvent$_store INLINECALLDICT
     ENDC
   }>
+  $NewDonation$_store PROCINLINE:<{
+    3359593827 PUSHINT
+    s0 s8 XCHG2
+    32 STU
+    s0 s6 XCHG2
+    __tact_store_address INLINECALLDICT
+    s1 s4 XCHG
+    64 STU
+    ROT
+    __tact_store_address INLINECALLDICT
+    s3 s4 XCHG2
+    $Data$_store INLINECALLDICT
+  }>
+  $NewDonation$_store_cell PROCINLINE:<{
+    NEWC
+    7 -ROLL
+    $NewDonation$_store INLINECALLDICT
+    ENDC
+  }>
   $ChangeActive$_load PROCINLINE:<{
     32 LDU
     SWAP
@@ -242,7 +264,7 @@ PROGRAM{
         B{b5ee9c724101010100020000004cacb9cd} B>boc <s PUSHSLICE
         B{b5ee9c724101010100020000004cacb9cd} B>boc <s PUSHSLICE
     $Data$_constructor_title_description_image_link INLINECALLDICT
-    FALSE
+    TRUE
         MYADDR
     s6 s8 XCHG
     s6 s7 XCHG
@@ -404,6 +426,8 @@ PROGRAM{
     s8 s7 PUSH2
     $DonationData$_constructor_donated_deployer_id_owner_data INLINECALLDICT
   }>
+  $NewDonation$_constructor_address_id_owner_data PROCINLINE:<{
+  }>
   $DonationEvent$_constructor_amount_from PROCINLINE:<{
   }>
   $SendParameters$_constructor_to_value_mode PROCINLINE:<{
@@ -424,9 +448,20 @@ PROGRAM{
     s9 s(-1) PUXC
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
-    s1 s5 XCHG
-    s1 s4 XCHG
-    s3 s3 s0 XCHG3
+    s5 s4 s3 PUSH3
+    s5 s4 PUSH2
+        MYADDR
+    s5 s12 XCPU
+    s0 s5 XCHG
+    s4 s8 XCHG
+    s3 s12 XCHG
+    s11 s10 s9 XCHG3
+    $NewDonation$_constructor_address_id_owner_data INLINECALLDICT
+    $NewDonation$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
+    s4 s5 XCHG
+    s3 s4 XCHG
+    s1 s3 s0 XCHG3
   }>
   $Donation$_internal_binary_ChangeActive PROCINLINE:<{
     NIP

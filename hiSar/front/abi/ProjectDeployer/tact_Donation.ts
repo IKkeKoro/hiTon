@@ -1098,41 +1098,68 @@ export type NewProject = {
     $$type: 'NewProject';
     address: Address;
     id: bigint;
+    data: Data;
+    owner: Address;
+    required: bigint;
+    percents: Dictionary<bigint, bigint>;
 }
 
 export function storeNewProject(src: NewProject) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(814799246, 32);
+        b_0.storeUint(1463093253, 32);
         b_0.storeAddress(src.address);
         b_0.storeUint(src.id, 64);
+        let b_1 = new Builder();
+        b_1.store(storeData(src.data));
+        b_1.storeAddress(src.owner);
+        b_1.storeCoins(src.required);
+        b_1.storeDict(src.percents, Dictionary.Keys.BigInt(257), Dictionary.Values.BigInt(257));
+        b_0.storeRef(b_1.endCell());
     };
 }
 
 export function loadNewProject(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 814799246) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 1463093253) { throw Error('Invalid prefix'); }
     let _address = sc_0.loadAddress();
     let _id = sc_0.loadUintBig(64);
-    return { $$type: 'NewProject' as const, address: _address, id: _id };
+    let sc_1 = sc_0.loadRef().beginParse();
+    let _data = loadData(sc_1);
+    let _owner = sc_1.loadAddress();
+    let _required = sc_1.loadCoins();
+    let _percents = Dictionary.load(Dictionary.Keys.BigInt(257), Dictionary.Values.BigInt(257), sc_1);
+    return { $$type: 'NewProject' as const, address: _address, id: _id, data: _data, owner: _owner, required: _required, percents: _percents };
 }
 
 function loadTupleNewProject(source: TupleReader) {
     let _address = source.readAddress();
     let _id = source.readBigNumber();
-    return { $$type: 'NewProject' as const, address: _address, id: _id };
+    const _data = loadTupleData(source);
+    let _owner = source.readAddress();
+    let _required = source.readBigNumber();
+    let _percents = Dictionary.loadDirect(Dictionary.Keys.BigInt(257), Dictionary.Values.BigInt(257), source.readCellOpt());
+    return { $$type: 'NewProject' as const, address: _address, id: _id, data: _data, owner: _owner, required: _required, percents: _percents };
 }
 
 function loadGetterTupleNewProject(source: TupleReader) {
     let _address = source.readAddress();
     let _id = source.readBigNumber();
-    return { $$type: 'NewProject' as const, address: _address, id: _id };
+    const _data = loadGetterTupleData(source);
+    let _owner = source.readAddress();
+    let _required = source.readBigNumber();
+    let _percents = Dictionary.loadDirect(Dictionary.Keys.BigInt(257), Dictionary.Values.BigInt(257), source.readCellOpt());
+    return { $$type: 'NewProject' as const, address: _address, id: _id, data: _data, owner: _owner, required: _required, percents: _percents };
 }
 
 function storeTupleNewProject(source: NewProject) {
     let builder = new TupleBuilder();
     builder.writeAddress(source.address);
     builder.writeNumber(source.id);
+    builder.writeTuple(storeTupleData(source.data));
+    builder.writeAddress(source.owner);
+    builder.writeNumber(source.required);
+    builder.writeCell(source.percents.size > 0 ? beginCell().storeDictDirect(source.percents, Dictionary.Keys.BigInt(257), Dictionary.Values.BigInt(257)).endCell() : null);
     return builder.build();
 }
 
@@ -1151,41 +1178,53 @@ export type NewDonation = {
     $$type: 'NewDonation';
     address: Address;
     id: bigint;
+    owner: Address;
+    data: Data;
 }
 
 export function storeNewDonation(src: NewDonation) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(460158014, 32);
+        b_0.storeUint(3359593827, 32);
         b_0.storeAddress(src.address);
         b_0.storeUint(src.id, 64);
+        b_0.storeAddress(src.owner);
+        b_0.store(storeData(src.data));
     };
 }
 
 export function loadNewDonation(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 460158014) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 3359593827) { throw Error('Invalid prefix'); }
     let _address = sc_0.loadAddress();
     let _id = sc_0.loadUintBig(64);
-    return { $$type: 'NewDonation' as const, address: _address, id: _id };
+    let _owner = sc_0.loadAddress();
+    let _data = loadData(sc_0);
+    return { $$type: 'NewDonation' as const, address: _address, id: _id, owner: _owner, data: _data };
 }
 
 function loadTupleNewDonation(source: TupleReader) {
     let _address = source.readAddress();
     let _id = source.readBigNumber();
-    return { $$type: 'NewDonation' as const, address: _address, id: _id };
+    let _owner = source.readAddress();
+    const _data = loadTupleData(source);
+    return { $$type: 'NewDonation' as const, address: _address, id: _id, owner: _owner, data: _data };
 }
 
 function loadGetterTupleNewDonation(source: TupleReader) {
     let _address = source.readAddress();
     let _id = source.readBigNumber();
-    return { $$type: 'NewDonation' as const, address: _address, id: _id };
+    let _owner = source.readAddress();
+    const _data = loadGetterTupleData(source);
+    return { $$type: 'NewDonation' as const, address: _address, id: _id, owner: _owner, data: _data };
 }
 
 function storeTupleNewDonation(source: NewDonation) {
     let builder = new TupleBuilder();
     builder.writeAddress(source.address);
     builder.writeNumber(source.id);
+    builder.writeAddress(source.owner);
+    builder.writeTuple(storeTupleData(source.data));
     return builder.build();
 }
 
@@ -1683,6 +1722,53 @@ function dictValueParserDeployProject(): DictionaryValue<DeployProject> {
     }
 }
 
+export type StageChanged = {
+    $$type: 'StageChanged';
+    stage: bigint;
+}
+
+export function storeStageChanged(src: StageChanged) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(2731741061, 32);
+        b_0.storeUint(src.stage, 8);
+    };
+}
+
+export function loadStageChanged(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 2731741061) { throw Error('Invalid prefix'); }
+    let _stage = sc_0.loadUintBig(8);
+    return { $$type: 'StageChanged' as const, stage: _stage };
+}
+
+function loadTupleStageChanged(source: TupleReader) {
+    let _stage = source.readBigNumber();
+    return { $$type: 'StageChanged' as const, stage: _stage };
+}
+
+function loadGetterTupleStageChanged(source: TupleReader) {
+    let _stage = source.readBigNumber();
+    return { $$type: 'StageChanged' as const, stage: _stage };
+}
+
+function storeTupleStageChanged(source: StageChanged) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.stage);
+    return builder.build();
+}
+
+function dictValueParserStageChanged(): DictionaryValue<StageChanged> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeStageChanged(src)).endCell());
+        },
+        parse: (src) => {
+            return loadStageChanged(src.loadRef().beginParse());
+        }
+    }
+}
+
 export type CheckWallet = {
     $$type: 'CheckWallet';
     wallet: Address;
@@ -1838,36 +1924,42 @@ function dictValueParserOwnerWithdraw(): DictionaryValue<OwnerWithdraw> {
 
 export type AddIncome = {
     $$type: 'AddIncome';
+    ownerPie: boolean;
     amount: bigint;
 }
 
 export function storeAddIncome(src: AddIncome) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(2399678173, 32);
+        b_0.storeUint(940962217, 32);
+        b_0.storeBit(src.ownerPie);
         b_0.storeCoins(src.amount);
     };
 }
 
 export function loadAddIncome(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 2399678173) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 940962217) { throw Error('Invalid prefix'); }
+    let _ownerPie = sc_0.loadBit();
     let _amount = sc_0.loadCoins();
-    return { $$type: 'AddIncome' as const, amount: _amount };
+    return { $$type: 'AddIncome' as const, ownerPie: _ownerPie, amount: _amount };
 }
 
 function loadTupleAddIncome(source: TupleReader) {
+    let _ownerPie = source.readBoolean();
     let _amount = source.readBigNumber();
-    return { $$type: 'AddIncome' as const, amount: _amount };
+    return { $$type: 'AddIncome' as const, ownerPie: _ownerPie, amount: _amount };
 }
 
 function loadGetterTupleAddIncome(source: TupleReader) {
+    let _ownerPie = source.readBoolean();
     let _amount = source.readBigNumber();
-    return { $$type: 'AddIncome' as const, amount: _amount };
+    return { $$type: 'AddIncome' as const, ownerPie: _ownerPie, amount: _amount };
 }
 
 function storeTupleAddIncome(source: AddIncome) {
     let builder = new TupleBuilder();
+    builder.writeBoolean(source.ownerPie);
     builder.writeNumber(source.amount);
     return builder.build();
 }
@@ -2007,6 +2099,53 @@ function dictValueParserValidate(): DictionaryValue<Validate> {
     }
 }
 
+export type AddVots = {
+    $$type: 'AddVots';
+    amount: bigint;
+}
+
+export function storeAddVots(src: AddVots) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(3970053455, 32);
+        b_0.storeCoins(src.amount);
+    };
+}
+
+export function loadAddVots(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 3970053455) { throw Error('Invalid prefix'); }
+    let _amount = sc_0.loadCoins();
+    return { $$type: 'AddVots' as const, amount: _amount };
+}
+
+function loadTupleAddVots(source: TupleReader) {
+    let _amount = source.readBigNumber();
+    return { $$type: 'AddVots' as const, amount: _amount };
+}
+
+function loadGetterTupleAddVots(source: TupleReader) {
+    let _amount = source.readBigNumber();
+    return { $$type: 'AddVots' as const, amount: _amount };
+}
+
+function storeTupleAddVots(source: AddVots) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.amount);
+    return builder.build();
+}
+
+function dictValueParserAddVots(): DictionaryValue<AddVots> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeAddVots(src)).endCell());
+        },
+        parse: (src) => {
+            return loadAddVots(src.loadRef().beginParse());
+        }
+    }
+}
+
 export type MintVots = {
     $$type: 'MintVots';
     sender: Address;
@@ -2116,6 +2255,7 @@ export type ProjectData = {
     income: bigint;
     owner: Address;
     id: bigint;
+    stage: bigint;
     data: Data;
 }
 
@@ -2129,6 +2269,7 @@ export function storeProjectData(src: ProjectData) {
         b_0.storeCoins(src.income);
         b_0.storeAddress(src.owner);
         b_0.storeUint(src.id, 64);
+        b_0.storeUint(src.stage, 8);
         b_0.store(storeData(src.data));
     };
 }
@@ -2142,8 +2283,9 @@ export function loadProjectData(slice: Slice) {
     let _income = sc_0.loadCoins();
     let _owner = sc_0.loadAddress();
     let _id = sc_0.loadUintBig(64);
+    let _stage = sc_0.loadUintBig(8);
     let _data = loadData(sc_0);
-    return { $$type: 'ProjectData' as const, voted: _voted, invested: _invested, required: _required, withdrawn: _withdrawn, income: _income, owner: _owner, id: _id, data: _data };
+    return { $$type: 'ProjectData' as const, voted: _voted, invested: _invested, required: _required, withdrawn: _withdrawn, income: _income, owner: _owner, id: _id, stage: _stage, data: _data };
 }
 
 function loadTupleProjectData(source: TupleReader) {
@@ -2154,8 +2296,9 @@ function loadTupleProjectData(source: TupleReader) {
     let _income = source.readBigNumber();
     let _owner = source.readAddress();
     let _id = source.readBigNumber();
+    let _stage = source.readBigNumber();
     const _data = loadTupleData(source);
-    return { $$type: 'ProjectData' as const, voted: _voted, invested: _invested, required: _required, withdrawn: _withdrawn, income: _income, owner: _owner, id: _id, data: _data };
+    return { $$type: 'ProjectData' as const, voted: _voted, invested: _invested, required: _required, withdrawn: _withdrawn, income: _income, owner: _owner, id: _id, stage: _stage, data: _data };
 }
 
 function loadGetterTupleProjectData(source: TupleReader) {
@@ -2166,8 +2309,9 @@ function loadGetterTupleProjectData(source: TupleReader) {
     let _income = source.readBigNumber();
     let _owner = source.readAddress();
     let _id = source.readBigNumber();
+    let _stage = source.readBigNumber();
     const _data = loadGetterTupleData(source);
-    return { $$type: 'ProjectData' as const, voted: _voted, invested: _invested, required: _required, withdrawn: _withdrawn, income: _income, owner: _owner, id: _id, data: _data };
+    return { $$type: 'ProjectData' as const, voted: _voted, invested: _invested, required: _required, withdrawn: _withdrawn, income: _income, owner: _owner, id: _id, stage: _stage, data: _data };
 }
 
 function storeTupleProjectData(source: ProjectData) {
@@ -2179,6 +2323,7 @@ function storeTupleProjectData(source: ProjectData) {
     builder.writeNumber(source.income);
     builder.writeAddress(source.owner);
     builder.writeNumber(source.id);
+    builder.writeNumber(source.stage);
     builder.writeTuple(storeTupleData(source.data));
     return builder.build();
 }
@@ -2402,6 +2547,59 @@ function dictValueParserAddInvest(): DictionaryValue<AddInvest> {
         },
         parse: (src) => {
             return loadAddInvest(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type IncomeAdded = {
+    $$type: 'IncomeAdded';
+    amount: bigint;
+    from: Address;
+}
+
+export function storeIncomeAdded(src: IncomeAdded) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(666248598, 32);
+        b_0.storeCoins(src.amount);
+        b_0.storeAddress(src.from);
+    };
+}
+
+export function loadIncomeAdded(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 666248598) { throw Error('Invalid prefix'); }
+    let _amount = sc_0.loadCoins();
+    let _from = sc_0.loadAddress();
+    return { $$type: 'IncomeAdded' as const, amount: _amount, from: _from };
+}
+
+function loadTupleIncomeAdded(source: TupleReader) {
+    let _amount = source.readBigNumber();
+    let _from = source.readAddress();
+    return { $$type: 'IncomeAdded' as const, amount: _amount, from: _from };
+}
+
+function loadGetterTupleIncomeAdded(source: TupleReader) {
+    let _amount = source.readBigNumber();
+    let _from = source.readAddress();
+    return { $$type: 'IncomeAdded' as const, amount: _amount, from: _from };
+}
+
+function storeTupleIncomeAdded(source: IncomeAdded) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.amount);
+    builder.writeAddress(source.from);
+    return builder.build();
+}
+
+function dictValueParserIncomeAdded(): DictionaryValue<IncomeAdded> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeIncomeAdded(src)).endCell());
+        },
+        parse: (src) => {
+            return loadIncomeAdded(src.loadRef().beginParse());
         }
     }
 }
@@ -2683,8 +2881,8 @@ function initDonation_init_args(src: Donation_init_args) {
 }
 
 async function Donation_init(deployer: Address, id: bigint) {
-    const __code = Cell.fromBase64('te6ccgECEgEABEYAART/APSkE/S88sgLAQIBYgIDA37QAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxVGNs88uCC2zwOBAUCASAMDQH2AZIwf+BwIddJwh+VMCDXCx/eIIIQ729dKrqOXTDTHwGCEO9vXSq68uCB1AHQAdQB0AHUAdDUAdAB1DDQECQQIwT6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIFWwVNjY2NjaCAN6t+EJSkMcF8vQVFEMwf+AgBgEWyPhDAcx/AcoAVYALAqSCEEHD1cu6jiAw0x8BghBBw9XLuvLggdIAATExggDerfhCUpDHBfL0f+AgwAAi10nBIbDjAoIQQRRlRrqOkdMfAYIQQRRlRrry4IH6AAEx4DBwBwgB4FuCAPBaIfL0+EFvJBNfAxmg+EFvJBNfA/hCyFmCEBJ8NaVQA8sfAfoCASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFsnIgljAAAAAAAAAAAAAAAABActnzMlw+wAlcIBAf1UgbW1t2zwwCH8JAe6CAPBaIvL0ggC9nPhBbyQTXwMivvL0GaD4QW8kE18D+ELIWYIQEnw1pVADyx8B+gIBINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WyciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ACVwgEB/VSBtbW3bPDAIfwkByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsICgCYfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzADsUJj6AlAGINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WFMs/WCDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFshDRAbIUATPFslQBMzIWM8WyQHMyMhQBM8WyVADzMhYzxbJAczJAczKAMkBzMntVAIRvw3O2ebZ42TEDg8AEb4V92omhpAADAH27UTQ1AH4Y9IAAY5v+gD6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdM/+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHUAdDUAdAB1AHQAdQB0NQB0AHUMNAQJBAjBNIAMBBZEFgQVxBWEDRBMGwZEAAQVHh2VHh2U4cBbuD4KNcLCoMJuvLgifpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgBgQEB1wBZAtEB2zwRACRwiwiLCIsIiwhw+CgQaBBnVUA=');
-    const __system = Cell.fromBase64('te6cckECFAEABFAAAQHAAQEFoW71AgEU/wD0pBP0vPLICwMCAWIEDQN+0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8VRjbPPLggts8DwULAfYBkjB/4HAh10nCH5UwINcLH94gghDvb10quo5dMNMfAYIQ729dKrry4IHUAdAB1AHQAdQB0NQB0AHUMNAQJBAjBPpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgVbBU2NjY2NoIA3q34QlKQxwXy9BUUQzB/4CAGAqSCEEHD1cu6jiAw0x8BghBBw9XLuvLggdIAATExggDerfhCUpDHBfL0f+AgwAAi10nBIbDjAoIQQRRlRrqOkdMfAYIQQRRlRrry4IH6AAEx4DBwBwgB4FuCAPBaIfL0+EFvJBNfAxmg+EFvJBNfA/hCyFmCEBJ8NaVQA8sfAfoCASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFsnIgljAAAAAAAAAAAAAAAABActnzMlw+wAlcIBAf1UgbW1t2zwwCH8JAe6CAPBaIvL0ggC9nPhBbyQTXwMivvL0GaD4QW8kE18D+ELIWYIQEnw1pVADyx8B+gIBINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WyciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ACVwgEB/VSBtbW3bPDAIfwkByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsICgCYfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzAEWyPhDAcx/AcoAVYAMAOxQmPoCUAYg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYUyz9YINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WyENEBshQBM8WyVAEzMhYzxbJAczIyFAEzxbJUAPMyFjPFskBzMkBzMoAyQHMye1UAgEgDhMCEb8Nztnm2eNkxA8SAfbtRNDUAfhj0gABjm/6APpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0z/6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdQB0NQB0AHUAdAB1AHQ1AHQAdQw0BAkECME0gAwEFkQWBBXEFYQNEEwbBkQAW7g+CjXCwqDCbry4In6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAYEBAdcAWQLRAds8EQAkcIsIiwiLCIsIcPgoEGgQZ1VAABBUeHZUeHZThwARvhX3aiaGkAAMJkLFxw==');
+    const __code = Cell.fromBase64('te6ccgECFgEABPMAART/APSkE/S88sgLAQIBYgIDA37QAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxVGNs88uCC2zwSBAUCASAQEQP0AZIwf+BwIddJwh+VMCDXCx/eIIIQ729dKrqOyjDTHwGCEO9vXSq68uCB1AHQAdQB0AHUAdDUAdAB1DDQECQQIwT6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIFWwV2zx/4CCCEEHD1cu64wIgwAAi10nBIbAGBwgBFsj4QwHMfwHKAFWADwFCNjY2NjaCAN6t+EJSkMcF8vRUdUNTVPgoUVwFEEgQPEupCQBAMNMfAYIQQcPVy7ry4IHSAAExMYIA3q34QlKQxwXy9H8C/I7wW4IA8Foh8vT4QW8kE18DGaD4QW8kE18D+ELIWYIQEnw1pVADyx8B+gIBINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WyciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ACVwgEB/VSBtbW3bPDAIf+CCEEEUZUa64wIwcA0LAezIVWCCEMg/VWNQCMsfUAYg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYUyz9YINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUDTIUATPFslQBMzIWM8WyQHMyMhQBM8WyVADzMhYzxbJAczJAczJCgA8yIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAEEUQNEEwASLTHwGCEEEUZUa68uCB+gABMQwB7oIA8Foi8vSCAL2c+EFvJBNfAyK+8vQZoPhBbyQTXwP4QshZghASfDWlUAPLHwH6AgEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAJXCAQH9VIG1tbds8MAh/DQHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wgOAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMAOxQmPoCUAYg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYUyz9YINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WyENEBshQBM8WyVAEzMhYzxbJAczIyFAEzxbJUAPMyFjPFskBzMkBzMoAyQHMye1UAhG/Dc7Z5tnjZMQSEwARvhX3aiaGkAAMAfbtRNDUAfhj0gABjm/6APpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0z/6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdQB0NQB0AHUAdAB1AHQ1AHQAdQw0BAkECME0gAwEFkQWBBXEFYQNEEwbBkUABBUeHZUeHZThwFu4Pgo1wsKgwm68uCJ+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAGBAQHXAFkC0QHbPBUAJHCLCIsIiwiLCH/4KBBoEGdVQA==');
+    const __system = Cell.fromBase64('te6cckECGAEABP0AAQHAAQEFoW71AgEU/wD0pBP0vPLICwMCAWIEEQN+0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8VRjbPPLggts8EwUPA/QBkjB/4HAh10nCH5UwINcLH94gghDvb10quo7KMNMfAYIQ729dKrry4IHUAdAB1AHQAdQB0NQB0AHUMNAQJBAjBPpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgVbBXbPH/gIIIQQcPVy7rjAiDAACLXScEhsAYJCgFCNjY2NjaCAN6t+EJSkMcF8vRUdUNTVPgoUVwFEEgQPEupBwHsyFVgghDIP1VjUAjLH1AGINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WFMs/WCDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlA0yFAEzxbJUATMyFjPFskBzMjIUATPFslQA8zIWM8WyQHMyQHMyQgAPMiCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABBFEDRBMABAMNMfAYIQQcPVy7ry4IHSAAExMYIA3q34QlKQxwXy9H8C/I7wW4IA8Foh8vT4QW8kE18DGaD4QW8kE18D+ELIWYIQEnw1pVADyx8B+gIBINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WyciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ACVwgEB/VSBtbW3bPDAIf+CCEEEUZUa64wIwcA0LASLTHwGCEEEUZUa68uCB+gABMQwB7oIA8Foi8vSCAL2c+EFvJBNfAyK+8vQZoPhBbyQTXwP4QshZghASfDWlUAPLHwH6AgEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAJXCAQH9VIG1tbds8MAh/DQHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wgOAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMARbI+EMBzH8BygBVgBAA7FCY+gJQBiDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFhTLP1gg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbIQ0QGyFAEzxbJUATMyFjPFskBzMjIUATPFslQA8zIWM8WyQHMyQHMygDJAczJ7VQCASASFwIRvw3O2ebZ42TEExYB9u1E0NQB+GPSAAGOb/oA+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHTP/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB1AHQ1AHQAdQB0AHUAdDUAdAB1DDQECQQIwTSADAQWRBYEFcQVhA0QTBsGRQBbuD4KNcLCoMJuvLgifpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgBgQEB1wBZAtEB2zwVACRwiwiLCIsIiwh/+CgQaBBnVUAAEFR4dlR4dlOHABG+FfdqJoaQAAxsYwpJ');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
@@ -2759,8 +2957,8 @@ const Donation_types: ABIType[] = [
     {"name":"UserData$Data","header":null,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"projectId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"deployer","type":{"kind":"simple","type":"address","optional":false}},{"name":"invested","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"voted","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"withdrawnAt","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"totalIncome","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"DeployerData","header":null,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"projectId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"donationId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"projectPrice","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"balance","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"master","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"Data","header":null,"fields":[{"name":"title","type":{"kind":"simple","type":"string","optional":false}},{"name":"description","type":{"kind":"simple","type":"string","optional":false}},{"name":"image","type":{"kind":"simple","type":"string","optional":false}},{"name":"link","type":{"kind":"simple","type":"string","optional":false}}]},
-    {"name":"NewProject","header":814799246,"fields":[{"name":"address","type":{"kind":"simple","type":"address","optional":false}},{"name":"id","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
-    {"name":"NewDonation","header":460158014,"fields":[{"name":"address","type":{"kind":"simple","type":"address","optional":false}},{"name":"id","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
+    {"name":"NewProject","header":1463093253,"fields":[{"name":"address","type":{"kind":"simple","type":"address","optional":false}},{"name":"id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"data","type":{"kind":"simple","type":"Data","optional":false}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"required","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"percents","type":{"kind":"dict","key":"int","value":"int"}}]},
+    {"name":"NewDonation","header":3359593827,"fields":[{"name":"address","type":{"kind":"simple","type":"address","optional":false}},{"name":"id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"data","type":{"kind":"simple","type":"Data","optional":false}}]},
     {"name":"ChangeOwner","header":2242002949,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"ChangeActive","header":1103353291,"fields":[{"name":"active","type":{"kind":"simple","type":"bool","optional":false}}]},
     {"name":"ChangePrice","header":3582265868,"fields":[{"name":"projectPrice","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
@@ -2770,19 +2968,22 @@ const Donation_types: ABIType[] = [
     {"name":"CreateProject","header":1719684186,"fields":[{"name":"data","type":{"kind":"simple","type":"Data","optional":false}},{"name":"required","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"percents","type":{"kind":"dict","key":"int","value":"int"}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"CreateDonation","header":3989847898,"fields":[{"name":"data","type":{"kind":"simple","type":"Data","optional":false}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"DeployProject","header":11469140,"fields":[{"name":"data","type":{"kind":"simple","type":"Data","optional":false}},{"name":"required","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"percents","type":{"kind":"dict","key":"int","value":"int"}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"StageChanged","header":2731741061,"fields":[{"name":"stage","type":{"kind":"simple","type":"uint","optional":false,"format":8}}]},
     {"name":"CheckWallet","header":2217665637,"fields":[{"name":"wallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"ChangeStage","header":581252563,"fields":[{"name":"stage","type":{"kind":"simple","type":"uint","optional":false,"format":8}}]},
     {"name":"OwnerWithdraw","header":4050357351,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
-    {"name":"AddIncome","header":2399678173,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
+    {"name":"AddIncome","header":940962217,"fields":[{"name":"ownerPie","type":{"kind":"simple","type":"bool","optional":false}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"TransferNotification","header":1935855772,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"forward_payload","type":{"kind":"simple","type":"slice","optional":false,"format":"remainder"}}]},
     {"name":"Validate","header":1488651829,"fields":[{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"wallet","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"AddVots","header":3970053455,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"MintVots","header":2849257298,"fields":[{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"Invest","header":3962699447,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
-    {"name":"ProjectData","header":null,"fields":[{"name":"voted","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"invested","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"required","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"withdrawn","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"income","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"data","type":{"kind":"simple","type":"Data","optional":false}}]},
+    {"name":"ProjectData","header":null,"fields":[{"name":"voted","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"invested","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"required","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"withdrawn","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"income","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"stage","type":{"kind":"simple","type":"uint","optional":false,"format":8}},{"name":"data","type":{"kind":"simple","type":"Data","optional":false}}]},
     {"name":"Invested","header":2469875973,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"from","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"Voted","header":870400834,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"from","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"Withdrawn","header":1165006918,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"from","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"AddInvest","header":3481252563,"fields":[{"name":"invested","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"voted","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
+    {"name":"IncomeAdded","header":666248598,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"from","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"UserWithdraw","header":927497335,"fields":[{"name":"from","type":{"kind":"simple","type":"address","optional":false}},{"name":"withdrawnAt","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"voted","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"invested","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"GetIncome","header":98224296,"fields":[{"name":"income","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"withdrawnAt","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"UserInfo","header":null,"fields":[{"name":"totalIncome","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"invested","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"voted","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"withdrawnAt","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"projectId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},

@@ -323,9 +323,6 @@ export type WalletData = {
     owner: Address;
     master: Address;
     code: Cell;
-    totalVoted: bigint;
-    inviter: Address;
-    poolWithdrawnAt: bigint;
 }
 
 export function storeWalletData(src: WalletData) {
@@ -335,11 +332,6 @@ export function storeWalletData(src: WalletData) {
         b_0.storeAddress(src.owner);
         b_0.storeAddress(src.master);
         b_0.storeRef(src.code);
-        let b_1 = new Builder();
-        b_1.storeInt(src.totalVoted, 257);
-        b_1.storeAddress(src.inviter);
-        b_1.storeInt(src.poolWithdrawnAt, 257);
-        b_0.storeRef(b_1.endCell());
     };
 }
 
@@ -349,11 +341,7 @@ export function loadWalletData(slice: Slice) {
     let _owner = sc_0.loadAddress();
     let _master = sc_0.loadAddress();
     let _code = sc_0.loadRef();
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _totalVoted = sc_1.loadIntBig(257);
-    let _inviter = sc_1.loadAddress();
-    let _poolWithdrawnAt = sc_1.loadIntBig(257);
-    return { $$type: 'WalletData' as const, balance: _balance, owner: _owner, master: _master, code: _code, totalVoted: _totalVoted, inviter: _inviter, poolWithdrawnAt: _poolWithdrawnAt };
+    return { $$type: 'WalletData' as const, balance: _balance, owner: _owner, master: _master, code: _code };
 }
 
 function loadTupleWalletData(source: TupleReader) {
@@ -361,10 +349,7 @@ function loadTupleWalletData(source: TupleReader) {
     let _owner = source.readAddress();
     let _master = source.readAddress();
     let _code = source.readCell();
-    let _totalVoted = source.readBigNumber();
-    let _inviter = source.readAddress();
-    let _poolWithdrawnAt = source.readBigNumber();
-    return { $$type: 'WalletData' as const, balance: _balance, owner: _owner, master: _master, code: _code, totalVoted: _totalVoted, inviter: _inviter, poolWithdrawnAt: _poolWithdrawnAt };
+    return { $$type: 'WalletData' as const, balance: _balance, owner: _owner, master: _master, code: _code };
 }
 
 function loadGetterTupleWalletData(source: TupleReader) {
@@ -372,10 +357,7 @@ function loadGetterTupleWalletData(source: TupleReader) {
     let _owner = source.readAddress();
     let _master = source.readAddress();
     let _code = source.readCell();
-    let _totalVoted = source.readBigNumber();
-    let _inviter = source.readAddress();
-    let _poolWithdrawnAt = source.readBigNumber();
-    return { $$type: 'WalletData' as const, balance: _balance, owner: _owner, master: _master, code: _code, totalVoted: _totalVoted, inviter: _inviter, poolWithdrawnAt: _poolWithdrawnAt };
+    return { $$type: 'WalletData' as const, balance: _balance, owner: _owner, master: _master, code: _code };
 }
 
 function storeTupleWalletData(source: WalletData) {
@@ -384,9 +366,6 @@ function storeTupleWalletData(source: WalletData) {
     builder.writeAddress(source.owner);
     builder.writeAddress(source.master);
     builder.writeCell(source.code);
-    builder.writeNumber(source.totalVoted);
-    builder.writeAddress(source.inviter);
-    builder.writeNumber(source.poolWithdrawnAt);
     return builder.build();
 }
 
@@ -397,6 +376,84 @@ function dictValueParserWalletData(): DictionaryValue<WalletData> {
         },
         parse: (src) => {
             return loadWalletData(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type MemberData = {
+    $$type: 'MemberData';
+    totalVoted: bigint;
+    lastClaimed: bigint;
+    subscribedUntil: bigint;
+    jettonsToClaim: bigint;
+    inviter: Address;
+    poolWithdrawnAt: bigint;
+}
+
+export function storeMemberData(src: MemberData) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeInt(src.totalVoted, 257);
+        b_0.storeInt(src.lastClaimed, 257);
+        b_0.storeInt(src.subscribedUntil, 257);
+        let b_1 = new Builder();
+        b_1.storeInt(src.jettonsToClaim, 257);
+        b_1.storeAddress(src.inviter);
+        b_1.storeInt(src.poolWithdrawnAt, 257);
+        b_0.storeRef(b_1.endCell());
+    };
+}
+
+export function loadMemberData(slice: Slice) {
+    let sc_0 = slice;
+    let _totalVoted = sc_0.loadIntBig(257);
+    let _lastClaimed = sc_0.loadIntBig(257);
+    let _subscribedUntil = sc_0.loadIntBig(257);
+    let sc_1 = sc_0.loadRef().beginParse();
+    let _jettonsToClaim = sc_1.loadIntBig(257);
+    let _inviter = sc_1.loadAddress();
+    let _poolWithdrawnAt = sc_1.loadIntBig(257);
+    return { $$type: 'MemberData' as const, totalVoted: _totalVoted, lastClaimed: _lastClaimed, subscribedUntil: _subscribedUntil, jettonsToClaim: _jettonsToClaim, inviter: _inviter, poolWithdrawnAt: _poolWithdrawnAt };
+}
+
+function loadTupleMemberData(source: TupleReader) {
+    let _totalVoted = source.readBigNumber();
+    let _lastClaimed = source.readBigNumber();
+    let _subscribedUntil = source.readBigNumber();
+    let _jettonsToClaim = source.readBigNumber();
+    let _inviter = source.readAddress();
+    let _poolWithdrawnAt = source.readBigNumber();
+    return { $$type: 'MemberData' as const, totalVoted: _totalVoted, lastClaimed: _lastClaimed, subscribedUntil: _subscribedUntil, jettonsToClaim: _jettonsToClaim, inviter: _inviter, poolWithdrawnAt: _poolWithdrawnAt };
+}
+
+function loadGetterTupleMemberData(source: TupleReader) {
+    let _totalVoted = source.readBigNumber();
+    let _lastClaimed = source.readBigNumber();
+    let _subscribedUntil = source.readBigNumber();
+    let _jettonsToClaim = source.readBigNumber();
+    let _inviter = source.readAddress();
+    let _poolWithdrawnAt = source.readBigNumber();
+    return { $$type: 'MemberData' as const, totalVoted: _totalVoted, lastClaimed: _lastClaimed, subscribedUntil: _subscribedUntil, jettonsToClaim: _jettonsToClaim, inviter: _inviter, poolWithdrawnAt: _poolWithdrawnAt };
+}
+
+function storeTupleMemberData(source: MemberData) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.totalVoted);
+    builder.writeNumber(source.lastClaimed);
+    builder.writeNumber(source.subscribedUntil);
+    builder.writeNumber(source.jettonsToClaim);
+    builder.writeAddress(source.inviter);
+    builder.writeNumber(source.poolWithdrawnAt);
+    return builder.build();
+}
+
+function dictValueParserMemberData(): DictionaryValue<MemberData> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeMemberData(src)).endCell());
+        },
+        parse: (src) => {
+            return loadMemberData(src.loadRef().beginParse());
         }
     }
 }
@@ -1056,42 +1113,36 @@ function dictValueParserRefIncome(): DictionaryValue<RefIncome> {
 
 export type AddVots = {
     $$type: 'AddVots';
-    sender: Address;
     amount: bigint;
 }
 
 export function storeAddVots(src: AddVots) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(2295555512, 32);
-        b_0.storeAddress(src.sender);
+        b_0.storeUint(3970053455, 32);
         b_0.storeCoins(src.amount);
     };
 }
 
 export function loadAddVots(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 2295555512) { throw Error('Invalid prefix'); }
-    let _sender = sc_0.loadAddress();
+    if (sc_0.loadUint(32) !== 3970053455) { throw Error('Invalid prefix'); }
     let _amount = sc_0.loadCoins();
-    return { $$type: 'AddVots' as const, sender: _sender, amount: _amount };
+    return { $$type: 'AddVots' as const, amount: _amount };
 }
 
 function loadTupleAddVots(source: TupleReader) {
-    let _sender = source.readAddress();
     let _amount = source.readBigNumber();
-    return { $$type: 'AddVots' as const, sender: _sender, amount: _amount };
+    return { $$type: 'AddVots' as const, amount: _amount };
 }
 
 function loadGetterTupleAddVots(source: TupleReader) {
-    let _sender = source.readAddress();
     let _amount = source.readBigNumber();
-    return { $$type: 'AddVots' as const, sender: _sender, amount: _amount };
+    return { $$type: 'AddVots' as const, amount: _amount };
 }
 
 function storeTupleAddVots(source: AddVots) {
     let builder = new TupleBuilder();
-    builder.writeAddress(source.sender);
     builder.writeNumber(source.amount);
     return builder.build();
 }
@@ -2478,7 +2529,8 @@ const MembersPool_types: ABIType[] = [
     {"name":"VarAddress","header":null,"fields":[{"name":"workchain","type":{"kind":"simple","type":"int","optional":false,"format":32}},{"name":"address","type":{"kind":"simple","type":"slice","optional":false}}]},
     {"name":"Context","header":null,"fields":[{"name":"bounced","type":{"kind":"simple","type":"bool","optional":false}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"raw","type":{"kind":"simple","type":"slice","optional":false}}]},
     {"name":"SendParameters","header":null,"fields":[{"name":"bounce","type":{"kind":"simple","type":"bool","optional":false}},{"name":"to","type":{"kind":"simple","type":"address","optional":false}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"mode","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"body","type":{"kind":"simple","type":"cell","optional":true}},{"name":"code","type":{"kind":"simple","type":"cell","optional":true}},{"name":"data","type":{"kind":"simple","type":"cell","optional":true}}]},
-    {"name":"WalletData","header":null,"fields":[{"name":"balance","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"master","type":{"kind":"simple","type":"address","optional":false}},{"name":"code","type":{"kind":"simple","type":"cell","optional":false}},{"name":"totalVoted","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"inviter","type":{"kind":"simple","type":"address","optional":false}},{"name":"poolWithdrawnAt","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
+    {"name":"WalletData","header":null,"fields":[{"name":"balance","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"master","type":{"kind":"simple","type":"address","optional":false}},{"name":"code","type":{"kind":"simple","type":"cell","optional":false}}]},
+    {"name":"MemberData","header":null,"fields":[{"name":"totalVoted","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"lastClaimed","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"subscribedUntil","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"jettonsToClaim","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"inviter","type":{"kind":"simple","type":"address","optional":false}},{"name":"poolWithdrawnAt","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
     {"name":"TokenWallet$Data","header":null,"fields":[{"name":"balance","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"master","type":{"kind":"simple","type":"address","optional":false}},{"name":"lastClaimed","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"subscribedUntil","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"jettonsToClaim","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"inviter","type":{"kind":"simple","type":"address","optional":false}},{"name":"totalVoted","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"poolWithdrawnAt","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
     {"name":"Deploy","header":2490013878,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"DeployOk","header":2952335191,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
@@ -2490,7 +2542,7 @@ const MembersPool_types: ABIType[] = [
     {"name":"Transfer","header":260734629,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"destination","type":{"kind":"simple","type":"address","optional":false}},{"name":"response_destination","type":{"kind":"simple","type":"address","optional":false}},{"name":"custom_payload","type":{"kind":"simple","type":"cell","optional":true}},{"name":"forward_ton_amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"forward_payload","type":{"kind":"simple","type":"slice","optional":false,"format":"remainder"}}]},
     {"name":"CheckWallet","header":2217665637,"fields":[{"name":"wallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"RefIncome","header":588723692,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"counter","type":{"kind":"simple","type":"uint","optional":false,"format":8}},{"name":"income","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
-    {"name":"AddVots","header":2295555512,"fields":[{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
+    {"name":"AddVots","header":3970053455,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"CheckSupply","header":634001287,"fields":[{"name":"totalVoted","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"poolWithdrawnAt","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"ClaimPool","header":2068911418,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"ChangeOwner","header":2242002949,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}}]},

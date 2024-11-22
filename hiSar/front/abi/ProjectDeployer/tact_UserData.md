@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: UserData
-BOC Size: 1205 bytes
+BOC Size: 1123 bytes
 
 # Types
-Total Types: 45
+Total Types: 48
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -74,12 +74,12 @@ TLB: `_ title:^string description:^string image:^string link:^string = Data`
 Signature: `Data{title:^string,description:^string,image:^string,link:^string}`
 
 ## NewProject
-TLB: `new_project#3090d98e address:address id:uint64 = NewProject`
-Signature: `NewProject{address:address,id:uint64}`
+TLB: `new_project#57350805 address:address id:uint64 data:Data{title:^string,description:^string,image:^string,link:^string} owner:address required:coins percents:dict<int, int> = NewProject`
+Signature: `NewProject{address:address,id:uint64,data:Data{title:^string,description:^string,image:^string,link:^string},owner:address,required:coins,percents:dict<int, int>}`
 
 ## NewDonation
-TLB: `new_donation#1b6d743e address:address id:uint64 = NewDonation`
-Signature: `NewDonation{address:address,id:uint64}`
+TLB: `new_donation#c83f5563 address:address id:uint64 owner:address data:Data{title:^string,description:^string,image:^string,link:^string} = NewDonation`
+Signature: `NewDonation{address:address,id:uint64,owner:address,data:Data{title:^string,description:^string,image:^string,link:^string}}`
 
 ## ChangeOwner
 TLB: `change_owner#85a24005 owner:address = ChangeOwner`
@@ -117,6 +117,10 @@ Signature: `CreateDonation{data:Data{title:^string,description:^string,image:^st
 TLB: `deploy_project#00af0154 data:Data{title:^string,description:^string,image:^string,link:^string} required:coins percents:dict<int, int> owner:address = DeployProject`
 Signature: `DeployProject{data:Data{title:^string,description:^string,image:^string,link:^string},required:coins,percents:dict<int, int>,owner:address}`
 
+## StageChanged
+TLB: `stage_changed#a2d30f85 stage:uint8 = StageChanged`
+Signature: `StageChanged{stage:uint8}`
+
 ## CheckWallet
 TLB: `check_wallet#842ee465 wallet:address sender:address amount:coins = CheckWallet`
 Signature: `CheckWallet{wallet:address,sender:address,amount:coins}`
@@ -130,8 +134,8 @@ TLB: `owner_withdraw#f16b8c67 amount:coins = OwnerWithdraw`
 Signature: `OwnerWithdraw{amount:coins}`
 
 ## AddIncome
-TLB: `add_income#8f082edd amount:coins = AddIncome`
-Signature: `AddIncome{amount:coins}`
+TLB: `add_income#3815f1a9 ownerPie:bool amount:coins = AddIncome`
+Signature: `AddIncome{ownerPie:bool,amount:coins}`
 
 ## TransferNotification
 TLB: `transfer_notification#7362d09c query_id:uint64 amount:coins sender:address forward_payload:remainder<slice> = TransferNotification`
@@ -140,6 +144,10 @@ Signature: `TransferNotification{query_id:uint64,amount:coins,sender:address,for
 ## Validate
 TLB: `validate#58bb0635 sender:address amount:coins wallet:address = Validate`
 Signature: `Validate{sender:address,amount:coins,wallet:address}`
+
+## AddVots
+TLB: `add_vots#eca2354f amount:coins = AddVots`
+Signature: `AddVots{amount:coins}`
 
 ## MintVots
 TLB: `mint_vots#a9d43752 sender:address amount:coins = MintVots`
@@ -150,8 +158,8 @@ TLB: `invest#ec31feb7 amount:coins = Invest`
 Signature: `Invest{amount:coins}`
 
 ## ProjectData
-TLB: `_ voted:coins invested:coins required:coins withdrawn:coins income:coins owner:address id:uint64 data:Data{title:^string,description:^string,image:^string,link:^string} = ProjectData`
-Signature: `ProjectData{voted:coins,invested:coins,required:coins,withdrawn:coins,income:coins,owner:address,id:uint64,data:Data{title:^string,description:^string,image:^string,link:^string}}`
+TLB: `_ voted:coins invested:coins required:coins withdrawn:coins income:coins owner:address id:uint64 stage:uint8 data:Data{title:^string,description:^string,image:^string,link:^string} = ProjectData`
+Signature: `ProjectData{voted:coins,invested:coins,required:coins,withdrawn:coins,income:coins,owner:address,id:uint64,stage:uint8,data:Data{title:^string,description:^string,image:^string,link:^string}}`
 
 ## Invested
 TLB: `invested#93375105 amount:coins from:address = Invested`
@@ -168,6 +176,10 @@ Signature: `Withdrawn{amount:coins,from:address}`
 ## AddInvest
 TLB: `add_invest#cf7fb2d3 invested:coins voted:coins = AddInvest`
 Signature: `AddInvest{invested:coins,voted:coins}`
+
+## IncomeAdded
+TLB: `income_added#27b62596 amount:coins from:address = IncomeAdded`
+Signature: `IncomeAdded{amount:coins,from:address}`
 
 ## UserWithdraw
 TLB: `user_withdraw#37487c77 from:address withdrawnAt:coins voted:coins invested:coins = UserWithdraw`

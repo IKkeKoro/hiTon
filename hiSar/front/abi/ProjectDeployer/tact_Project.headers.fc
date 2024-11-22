@@ -48,8 +48,20 @@ builder $Data$_store(builder build_0, (slice, slice, slice, slice) v) inline;
 ;; $Data$_load
 (slice, ((slice, slice, slice, slice))) $Data$_load(slice sc_0) inline;
 
+;; $NewProject$_store
+builder $NewProject$_store(builder build_0, (slice, int, (slice, slice, slice, slice), slice, int, cell) v) inline_ref;
+
+;; $NewProject$_store_cell
+cell $NewProject$_store_cell((slice, int, (slice, slice, slice, slice), slice, int, cell) v) inline;
+
 ;; $DeployProject$_load
 (slice, (((slice, slice, slice, slice), int, cell, slice))) $DeployProject$_load(slice sc_0) inline;
+
+;; $StageChanged$_store
+builder $StageChanged$_store(builder build_0, (int) v) inline;
+
+;; $StageChanged$_store_cell
+cell $StageChanged$_store_cell((int) v) inline;
 
 ;; $CheckWallet$_store
 builder $CheckWallet$_store(builder build_0, (slice, slice, int) v) inline;
@@ -64,7 +76,7 @@ cell $CheckWallet$_store_cell((slice, slice, int) v) inline;
 (slice, ((int))) $OwnerWithdraw$_load(slice sc_0) inline;
 
 ;; $AddIncome$_load
-(slice, ((int))) $AddIncome$_load(slice sc_0) inline;
+(slice, ((int, int))) $AddIncome$_load(slice sc_0) inline;
 
 ;; $TransferNotification$_load
 (slice, ((int, int, slice, slice))) $TransferNotification$_load(slice sc_0) inline;
@@ -99,6 +111,12 @@ builder $AddInvest$_store(builder build_0, (int, int) v) inline;
 ;; $AddInvest$_store_cell
 cell $AddInvest$_store_cell((int, int) v) inline;
 
+;; $IncomeAdded$_store
+builder $IncomeAdded$_store(builder build_0, (int, slice) v) inline;
+
+;; $IncomeAdded$_store_cell
+cell $IncomeAdded$_store_cell((int, slice) v) inline;
+
 ;; $UserWithdraw$_load
 (slice, ((slice, int, int, int))) $UserWithdraw$_load(slice sc_0) inline;
 
@@ -118,7 +136,7 @@ builder $Project$_store(builder build_0, (slice, int, slice, (slice, slice, slic
 _ $Context$_get_value((int, slice, int, slice) v) inline;
 
 ;; $ProjectData$_to_external
-(int, int, int, int, int, slice, int, (slice, slice, slice, slice)) $ProjectData$_to_external(((int, int, int, int, int, slice, int, (slice, slice, slice, slice))) v) inline;
+(int, int, int, int, int, slice, int, int, (slice, slice, slice, slice)) $ProjectData$_to_external(((int, int, int, int, int, slice, int, int, (slice, slice, slice, slice))) v) inline;
 
 ;; $Project$init$_load
 (slice, ((slice, int))) $Project$init$_load(slice sc_0) inline;
@@ -150,11 +168,11 @@ int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline
 ;; $Context$_fun_readForwardFee
 int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_ref;
 
-;; $ProjectData$_constructor_voted_invested_required_withdrawn_income_owner_id_data
-((int, int, int, int, int, slice, int, (slice, slice, slice, slice))) $ProjectData$_constructor_voted_invested_required_withdrawn_income_owner_id_data(int $voted, int $invested, int $required, int $withdrawn, int $income, slice $owner, int $id, (slice, slice, slice, slice) $data) inline;
+;; $ProjectData$_constructor_voted_invested_required_withdrawn_income_owner_stage_id_data
+((int, int, int, int, int, slice, int, int, (slice, slice, slice, slice))) $ProjectData$_constructor_voted_invested_required_withdrawn_income_owner_stage_id_data(int $voted, int $invested, int $required, int $withdrawn, int $income, slice $owner, int $stage, int $id, (slice, slice, slice, slice) $data) inline;
 
 ;; $Project$_fun_projectData
-((slice, int, slice, (slice, slice, slice, slice), int, int, int, int, int, int, cell), (int, int, int, int, int, slice, int, (slice, slice, slice, slice))) $Project$_fun_projectData((slice, int, slice, (slice, slice, slice, slice), int, int, int, int, int, int, cell) $self) impure inline_ref;
+((slice, int, slice, (slice, slice, slice, slice), int, int, int, int, int, int, cell), (int, int, int, int, int, slice, int, int, (slice, slice, slice, slice))) $Project$_fun_projectData((slice, int, slice, (slice, slice, slice, slice), int, int, int, int, int, int, cell) $self) impure inline_ref;
 
 ;; $UserData$_init_child
 (cell, cell) $UserData$_init_child(cell sys', slice $owner, int $projectId, slice $deployer) inline_ref;
@@ -162,11 +180,20 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $Project$_fun_userData
 ((slice, int, slice, (slice, slice, slice, slice), int, int, int, int, int, int, cell), slice) $Project$_fun_userData((slice, int, slice, (slice, slice, slice, slice), int, int, int, int, int, int, cell) $self, slice $owner) impure inline_ref;
 
+;; $NewProject$_constructor_address_id_data_owner_required_percents
+((slice, int, (slice, slice, slice, slice), slice, int, cell)) $NewProject$_constructor_address_id_data_owner_required_percents(slice $address, int $id, (slice, slice, slice, slice) $data, slice $owner, int $required, cell $percents) inline;
+
+;; $StageChanged$_constructor_stage
+((int)) $StageChanged$_constructor_stage(int $stage) inline;
+
 ;; $Withdrawn$_constructor_amount_from
 ((int, slice)) $Withdrawn$_constructor_amount_from(int $amount, slice $from) inline;
 
 ;; $SendParameters$_constructor_to_value_mode
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode(slice $to, int $value, int $mode) inline;
+
+;; $IncomeAdded$_constructor_amount_from
+((int, slice)) $IncomeAdded$_constructor_amount_from(int $amount, slice $from) inline;
 
 ;; $SendParameters$_constructor_to_value_mode_body
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_body(slice $to, int $value, int $mode, cell $body) inline;

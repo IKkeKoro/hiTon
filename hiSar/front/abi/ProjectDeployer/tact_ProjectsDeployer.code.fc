@@ -19,7 +19,7 @@
 
 ((int, int, slice, int, int), (slice, int, int, int, int, slice)) $ProjectsDeployer$_fun_data((int, int, slice, int, int) $self) impure inline_ref {
     var (($self'projectId, $self'donationId, $self'owner, $self'active, $self'projectPrice)) = $self;
-    var $fresh$ret_25 = $DeployerData$_constructor_owner_projectId_donationId_projectPrice_master_balance($self'owner, $self'projectId, $self'donationId, $self'projectPrice, __gen_slice_address_cb978b966d3f5e32c7e160e7e2e5ac73fffebc46fa63ef1a6f944765d38789cb(), $global_myBalance());
+    var $fresh$ret_25 = $DeployerData$_constructor_owner_projectId_donationId_projectPrice_master_balance($self'owner, $self'projectId, $self'donationId, $self'projectPrice, __gen_slice_address_5f45e3ecf0a724d94ef8d1c710fa27693da01a43e205276deaa52922c154f0b2(), $global_myBalance());
     return (($self'projectId, $self'donationId, $self'owner, $self'active, $self'projectPrice), $fresh$ret_25);
 }
 
@@ -100,18 +100,15 @@
     var ($self'projectId, $self'donationId, $self'owner, $self'active, $self'projectPrice) = $self;
     var (($msg'data'title, $msg'data'description, $msg'data'image, $msg'data'link), $msg'required, $msg'percents, $msg'owner) = $msg;
     throw_unless(61530, $self'active);
-    throw_unless(48540, ($Context$_get_value(__tact_context_get()) > ($self'projectPrice + $Context$_fun_readForwardFee(__tact_context_get()))));
+    throw_unless(48540, ($Context$_get_value(__tact_context_get()) > (($self'projectPrice + $Context$_fun_readForwardFee(__tact_context_get())) + 200000000)));
     var ($init'code, $init'data) = $Project$_init_child(__tact_context_sys, $global_myAddress(), $self'projectId);
     slice $to = $global_contractAddress(($init'code, $init'data));
     int $percents = (((__tact_not_null(__tact_dict_get_int_int($msg'percents, 257, 0, 257)) + __tact_not_null(__tact_dict_get_int_int($msg'percents, 257, 1, 257))) + __tact_not_null(__tact_dict_get_int_int($msg'percents, 257, 2, 257))) + __tact_not_null(__tact_dict_get_int_int($msg'percents, 257, 3, 257)));
     throw_unless(44024, ($percents == 100));
-    throw_unless(44024, (__tact_not_null(__tact_dict_get_int_int($msg'percents, 257, 0, 257)) > 5));
-    throw_unless(44024, (__tact_not_null(__tact_dict_get_int_int($msg'percents, 257, 1, 257)) > 5));
-    throw_unless(44024, (__tact_not_null(__tact_dict_get_int_int($msg'percents, 257, 2, 257)) > 20));
-    throw_unless(44024, (__tact_not_null(__tact_dict_get_int_int($msg'percents, 257, 3, 257)) > 20));
-    $global_send($SendParameters$_constructor_to_value_mode_body_data_code($to, 0, 1, $DeployProject$_store_cell($DeployProject$_constructor_owner_data_required_percents($msg'owner, ($msg'data'title, $msg'data'description, $msg'data'image, $msg'data'link), $msg'required, $msg'percents)), $init'data, $init'code));
-    $global_emit($NewProject$_store_cell($NewProject$_constructor_address_id($to, $self'projectId)));
+    throw_unless(44024, ( (( (( ((__tact_not_null(__tact_dict_get_int_int($msg'percents, 257, 0, 257)) > 0)) ? ((__tact_not_null(__tact_dict_get_int_int($msg'percents, 257, 1, 257)) > 0)) : (false) )) ? ((__tact_not_null(__tact_dict_get_int_int($msg'percents, 257, 2, 257)) > 0)) : (false) )) ? ((__tact_not_null(__tact_dict_get_int_int($msg'percents, 257, 3, 257)) > 0)) : (false) ));
+    $global_emit($NewProject$_store_cell($NewProject$_constructor_address_id_data_owner_required_percents($to, $self'projectId, ($msg'data'title, $msg'data'description, $msg'data'image, $msg'data'link), $msg'owner, $msg'required, $msg'percents)));
     $self'projectId = $self'projectId + 1;
+    $global_send($SendParameters$_constructor_to_value_mode_body_data_code($to, 200000000, 0, $DeployProject$_store_cell($DeployProject$_constructor_owner_data_required_percents($msg'owner, ($msg'data'title, $msg'data'description, $msg'data'image, $msg'data'link), $msg'required, $msg'percents)), $init'data, $init'code));
     return (($self'projectId, $self'donationId, $self'owner, $self'active, $self'projectPrice), ());
 }
 
@@ -120,11 +117,11 @@
     var (($msg'data'title, $msg'data'description, $msg'data'image, $msg'data'link), $msg'owner) = $msg;
     throw_unless(61530, $self'active);
     throw_unless(48540, ($Context$_get_value(__tact_context_get()) > ($self'projectPrice + $Context$_fun_readForwardFee(__tact_context_get()))));
-    var ($init'code, $init'data) = $Donation$_init_child(__tact_context_sys, $global_myAddress(), $self'projectId);
+    var ($init'code, $init'data) = $Donation$_init_child(__tact_context_sys, $global_myAddress(), $self'donationId);
     slice $to = $global_contractAddress(($init'code, $init'data));
-    $global_send($SendParameters$_constructor_to_value_mode_body_data_code($to, 0, 1, $DeployDonation$_store_cell($DeployDonation$_constructor_owner_data($msg'owner, ($msg'data'title, $msg'data'description, $msg'data'image, $msg'data'link))), $init'data, $init'code));
-    $global_emit($NewDonation$_store_cell($NewDonation$_constructor_address_id($to, $self'donationId)));
+    $global_emit($NewDonation$_store_cell($NewDonation$_constructor_address_id_owner_data($to, $self'donationId, $msg'owner, ($msg'data'title, $msg'data'description, $msg'data'image, $msg'data'link))));
     $self'donationId = $self'donationId + 1;
+    $global_send($SendParameters$_constructor_to_value_mode_body_data_code($to, 200000000, 0, $DeployDonation$_store_cell($DeployDonation$_constructor_owner_data($msg'owner, ($msg'data'title, $msg'data'description, $msg'data'image, $msg'data'link))), $init'data, $init'code));
     return (($self'projectId, $self'donationId, $self'owner, $self'active, $self'projectPrice), ());
 }
 
