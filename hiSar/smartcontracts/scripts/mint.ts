@@ -5,8 +5,8 @@ import { master } from './address/const';
 export async function run(provider: NetworkProvider) {
 
     const tkMaster = provider.open(TokenMaster.fromAddress(master));
-    const amount = toNano('100000000')  // 200 * 10^9 
-    const to =  provider.sender().address!! //Address.parse("0QBUTV4-IBl4bnK4aSvmMdvjoB-02lDLP4sGI-MkEHYKTGiC")
+    const amount = toNano('1000000')  // 200 * 10^9 
+    const to =  provider.sender().address! // Address.parse("kQCb-O1Tn-_RL_T4h2U6VU-4dqmYewmWx6HpJrdJTOXy6EDC")
     await tkMaster.send(
         provider.sender(),
         {

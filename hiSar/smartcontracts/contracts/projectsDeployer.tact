@@ -1,6 +1,7 @@
 import "@stdlib/deploy";
 import "./project.tact";
 import "./donation.tact";
+const fee: Int = ton("0.2");
 //_______________________________________________________
 contract ProjectsDeployer with Deployable {
     projectId: Int as uint64 = 0;
@@ -74,19 +75,18 @@ contract ProjectsDeployer with Deployable {
 //USER___________________________________________________
     receive(msg: CreateProject) {
         require(self.active, "Not active");
-        require(context().value > self.projectPrice + context().readForwardFee(), "Not enough tons");
+        require(context().value > self.projectPrice + context().readForwardFee() + fee, "Not enough tons");
         let init: StateInit = initOf Project(myAddress(), self.projectId);
         let to: Address = contractAddress(init);
         let percents: Int = msg.percents.get(0)!! + msg.percents.get(1)!! + msg.percents.get(2)!! + msg.percents.get(3)!!;
         require(percents == 100, "Invalid percents");
-        require(msg.percents.get(0)!! > 5, "Invalid percents");
-        require(msg.percents.get(1)!! > 5, "Invalid percents");
-        require(msg.percents.get(2)!! > 20, "Invalid percents");
-        require(msg.percents.get(3)!! > 20, "Invalid percents");
+        require((msg.percents.get(0)!! > 0) && (msg.percents.get(1)!! > 0) && (msg.percents.get(2)!! > 0) && (msg.percents.get(3)!! > 0), "Invalid percents");
+        emit(NewProject{address: to, id: self.projectId, data: msg.data, owner: msg.owner, required: msg.required, percents: msg.percents}.toCell());
+        self.projectId += 1;
         send(SendParameters {
             to: to,
-            value: 0,
-            mode: SendRemainingValue,
+            value: fee,
+            mode: 0,
             body: DeployProject{
                 owner: msg.owner,
                 data: msg.data,
@@ -96,7 +96,6 @@ contract ProjectsDeployer with Deployable {
             data: init.data,
             code: init.code
         });
-        emit(NewProject{address: to, id: self.projectId}.toCell());
     }
 
     receive(msg: CreateDonation) {
@@ -104,10 +103,12 @@ contract ProjectsDeployer with Deployable {
         require(context().value > self.projectPrice + context().readForwardFee(), "Not enough tons");
         let init: StateInit = initOf Donation(myAddress(), self.donationId);
         let to: Address = contractAddress(init);
+        emit(NewDonation{address: to, id: self.donationId, owner: msg.owner, data: msg.data}.toCell());
+        self.donationId += 1;
         send(SendParameters {
             to: to,
-            value: 0,
-            mode: SendRemainingValue,
+            value: fee,
+            mode: 0,
             body: DeployDonation{
                 owner: msg.owner,
                 data: msg.data
@@ -115,22 +116,6 @@ contract ProjectsDeployer with Deployable {
             data: init.data,
             code: init.code
         });
-        emit(NewDonation{address: to, id: self.donationId}.toCell());
-    }
-
-    receive(msg: ProjectDeployed) {
-        let init: StateInit = initOf Project(myAddress(), msg.id);
-        let to: Address = contractAddress(init);
-        let initDonation: StateInit = initOf Donation(myAddress(), msg.id);
-        let toDonation: Address = contractAddress(initDonation);
-        
-        if(sender() == to) {
-            self.projectId += 1;
-        }
-
-        if(sender() == toDonation) {
-            self.donationId += 1;
-        }
     }
 //GETTERS________________________________________________
     get fun data(): DeployerData {

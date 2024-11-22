@@ -27,7 +27,6 @@ message RefIncome{
 }
 
 message AddVots{
-    sender: Address;
     amount: Int as coins;
 }
 
@@ -102,10 +101,10 @@ message SendIncome{
     poolWithdrawnAt: Int as coins;
 }
 
-message Validate{
-    wallet: Address;
+message (0x58520ee8) Validate{
     sender: Address;
     amount: Int as coins;
+    wallet: Address;
 }
 
 message PoolIncome{

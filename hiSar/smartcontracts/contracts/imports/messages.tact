@@ -1,6 +1,6 @@
 
 import "../project.tact";
-const jettonMaster: Address = address("EQDoLEZxYMJ5znX2GVBZ8OqTEIZx7SsT48eJH8B3UC3BHDnj");
+const jettonMaster: Address = address("EQAc3zAqsdInKcs0LBPITeT7Lu-b-XI-PNA_XVytP4GwEpoN");
 
 struct DeployerData {
     owner: Address;
@@ -21,11 +21,17 @@ struct Data{
 message NewProject {
     address: Address;
     id: Int as uint64;
+    data: Data;
+    owner: Address;
+    required: Int as coins;
+    percents: map<Int, Int>;
 }
 
 message NewDonation {
     address: Address;
     id: Int as uint64;
+    owner: Address;
+    data: Data;
 }
 
 message ChangeOwner{
@@ -73,8 +79,8 @@ message DeployProject{
     owner: Address;
 }
 
-message ProjectDeployed{
-    id: Int as uint64;
+message StageChanged{
+    stage: Int as uint8;
 }
 
 message CheckWallet{
@@ -103,14 +109,13 @@ message(0x7362d09c) TransferNotification {
     forward_payload: Slice as remaining;
 }
 
-message Validate{
+message (0x58520ee8) Validate{
     sender: Address;
     amount: Int as coins;
     wallet: Address;
 }
 
 message AddVots{
-    sender: Address;
     amount: Int as coins;
 }
 
@@ -132,6 +137,7 @@ struct ProjectData {
     income: Int as coins;
     owner: Address;
     id: Int as uint64;
+    stage: Int as uint8;
     data: Data;
 }
 
@@ -153,6 +159,11 @@ message Withdrawn {
 message AddInvest{
     invested: Int as coins;
     voted: Int as coins;
+}
+
+message IncomeAdded{
+    amount: Int as coins;
+    from: Address;
 }
 
 message UserWithdraw{

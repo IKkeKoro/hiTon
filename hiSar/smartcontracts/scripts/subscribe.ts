@@ -9,7 +9,7 @@ export async function run(provider: NetworkProvider) {
     await tkMaster.send(
         provider.sender(),
         {
-            value: toNano('0.4'),
+            value: toNano('0.3'),
         },
         {
             $$type: 'Subscribe',

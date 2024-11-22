@@ -32,7 +32,7 @@ contract Donation {
         image: "",
         link: ""
     };
-    active: Bool = false;
+    active: Bool = true;
 
     init(deployer: Address, id: Int) {
         self.id = id;
@@ -44,14 +44,7 @@ contract Donation {
         require(sender() == self.deployer, "Not a deployer");
         self.data = msg.data;
         self.owner = msg.owner;
-        send(SendParameters {
-            to: self.deployer,
-            value: 0,
-            mode: SendRemainingValue,
-            body: ProjectDeployed{
-                id: self.id
-            }.toCell()
-        });
+        emit(NewDonation{address: myAddress(), id: self.id, owner: msg.owner, data: msg.data}.toCell());
     }
 
     receive(msg: ChangeActive) {

@@ -8,10 +8,17 @@ struct WalletData {
     owner: Address;
     master: Address;
     code: Cell;
+
+}
+
+struct MemberData {
     totalVoted: Int;
+    lastClaimed: Int;
+    subscribedUntil: Int;
+    jettonsToClaim: Int;
     inviter: Address;
     poolWithdrawnAt: Int;
-}
+} 
 
 contract TokenWallet {
     balance: Int as coins = 0;
@@ -39,6 +46,11 @@ contract TokenWallet {
         require(self.owner == sender() || self.master == sender(), "Invalid sender");
         require(self.inviter == dev, "Inviter already set");
         self.inviter = msg.inviter;
+        // emit(ProfileUpdate{
+        //     inviter: self.inviter, totalVoted: self.totalVoted, lastClaimed: self.lastClaimed, 
+        //     subscribedUntil: self.subscribedUntil, withdrawnAt: self.withdrawnAt, jettonsToClaim: self.jettonsToClaim,
+        //     balance: self.balance
+        // }.toCell());
     }
 
     receive(msg: Transfer) {
@@ -67,7 +79,7 @@ contract TokenWallet {
     }
 
     receive(msg: AddVots) {
-        require(self.owner == msg.sender, "Invalid sender");
+        require(sender() == self.master, "Invalid sender");
         self.totalVoted = self.totalVoted + msg.amount;
     }
 
@@ -131,10 +143,11 @@ contract TokenWallet {
         self.lastClaimed = now();
         self.subscribedUntil = now() + 1 + ((60 * 60 * 24 * 7) * 4);
         let refIncome: Int = (msg.price / 10);
+        let value: Int = context().value - context().readForwardFee() - ton("0.002");
         send(SendParameters {
             to: refWallet,
-            value: (refIncome + (refIncome/2) + ton("0.04")),
-            mode: SendRemainingValue,
+            value: value,
+            mode: 0,
             body: RefIncome {
                 income: refIncome,
                 sender: self.owner,
@@ -154,10 +167,11 @@ contract TokenWallet {
         let initTo: StateInit = initOf TokenWallet(self.owner, self.master);
         let to: Address = contractAddress(initTo);
         let refIncome: Int = (msg.income / 2);
+        let value: Int = context().value - msg.income -context().readForwardFee() - ton("0.01");
         if(msg.counter < 1) {
             send(SendParameters {
                 to: to,
-                value: refIncome + ton("0.02"),
+                value: value,
                 mode: 0,
                 body: RefIncome {
                     income: refIncome,
@@ -218,6 +232,17 @@ contract TokenWallet {
     }
 
     get fun get_wallet_data(): WalletData {
-        return WalletData{balance: self.balance, poolWithdrawnAt: self.poolWithdrawnAt, totalVoted: self.totalVoted, inviter: self.inviter, owner: self.owner, master: self.master, code: (initOf TokenWallet(self.owner, self.master)).code};
+        return WalletData{balance: self.balance, owner: self.owner, master: self.master, code: (initOf TokenWallet(self.owner, self.master)).code};
+    }
+
+    get fun memberData(): MemberData {
+        return MemberData{
+            totalVoted: self.totalVoted,
+            lastClaimed: self.lastClaimed,
+            subscribedUntil: self.subscribedUntil,
+            jettonsToClaim: self.jettonsToClaim,
+            inviter: self.inviter,
+            poolWithdrawnAt: self.poolWithdrawnAt
+        };
     }
 }

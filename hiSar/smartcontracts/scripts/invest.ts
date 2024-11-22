@@ -8,15 +8,15 @@ export async function run(provider: NetworkProvider) {
     const projectsDeployer = provider.open(ProjectsDeployer.fromAddress(deployer));
     const projectId = 0;
     const project = provider.open(Project.fromAddress(await projectsDeployer.getProjectAddress(BigInt(projectId))));
-    const income = toNano('200')
+    const amount = toNano('0.1')
     await project.send(
         provider.sender(),
         {
-            value: toNano('0.02'),
+            value: amount + toNano('0.1'),
         },
         {
             $$type: 'Invest',
-            amount: income 
+            amount: amount 
         }
     );
 }

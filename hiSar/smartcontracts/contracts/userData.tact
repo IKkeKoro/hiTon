@@ -22,30 +22,7 @@ contract UserData {
         require(sender() == from, "Wrong sender");
         self.invested += msg.invested;
         self.voted += msg.voted;
-        send(SendParameters {
-            to: jettonMaster,
-            value: 0,
-            mode: SendRemainingValue,
-            body: CheckWallet{
-                wallet: self.owner,
-                sender: self.owner,
-                amount: msg.voted
-            }.toCell()
-        });  
 
-    }
-
-    receive(msg: Validate) {
-        require(sender() == jettonMaster, "Wrong sender");
-        send(SendParameters {
-            to: msg.wallet,
-            value: 0,
-            mode: SendRemainingValue,
-            body: AddVots{
-                sender: self.owner,
-                amount: msg.amount
-            }.toCell()
-        });  
     }
 
     receive(msg: Withdraw) {

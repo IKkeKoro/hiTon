@@ -35,19 +35,13 @@ contract Project {
         self.required = msg.required;
         self.percents = msg.percents;
         self.owner = msg.owner;
-        send(SendParameters {
-            to: self.deployer,
-            value: 0,
-            mode: SendRemainingValue,
-            body: ProjectDeployed{
-                id: self.id
-            }.toCell()
-        });
+        emit(NewProject{address: myAddress(), id: self.id, data: msg.data, owner: msg.owner, required: msg.required, percents: msg.percents}.toCell());
     }
 
     receive(msg: ChangeStage) {
         require(sender() == self.deployer, "Wrong sender");
         self.stage = msg.stage;
+        emit(StageChanged{stage: self.stage}.toCell());
     }
 //OWNER____________________________________________________
     receive(msg: OwnerWithdraw) {
@@ -71,6 +65,7 @@ contract Project {
             self.income += ownerPie;
         }
         self.income += msg.amount;
+        emit(IncomeAdded{amount: msg.amount, from: sender()}.toCell());
         send(SendParameters {
             to: self.deployer,
             value: ownerPie,
@@ -80,6 +75,7 @@ contract Project {
 //USER_____________________________________________________
     receive(msg: TransferNotification){
         require(self.stage == 1, "Wrong stage");
+        require(context().value >= ton("0.1"), "Not enough tons");
         send(SendParameters {
             to: jettonMaster,
             value: 0,
@@ -95,14 +91,15 @@ contract Project {
 
     receive(msg: Validate) {
         require(sender() == jettonMaster, "Wrong sender");
+        emit(Voted{amount: msg.amount, from: msg.sender}.toCell());
         self.voted += msg.amount;
         if( self.voted >= (self.required * 20) ){
             self.stage = 2;
+            emit(StageChanged{stage: self.stage}.toCell());
         }
 
         let init: StateInit = initOf UserData(msg.sender, self.id, self.deployer);
         let to: Address = contractAddress(init);
-        emit(Voted{amount: msg.amount, from: msg.sender}.toCell());
         send(SendParameters {
             to: to,
             value: 0,
@@ -119,10 +116,11 @@ contract Project {
 
     receive(msg: Invest) {
         require(self.stage == 2, "Wrong stage"); 
-        require(context().value >= msg.amount + context().readForwardFee(), "Not enough tons");
+        require(context().value >= msg.amount + context().readForwardFee() + ton("0.05"), "Not enough tons");
         self.invested += msg.amount;
         if( self.invested >= self.required ){
             self.stage = 3;
+            emit(StageChanged{stage: self.stage}.toCell());
         }
 
         let init: StateInit = initOf UserData(sender(), self.id, self.deployer);
@@ -130,8 +128,8 @@ contract Project {
         emit(Invested{amount: msg.amount, from: sender()}.toCell()); 
         send(SendParameters {
             to: to,
-            value: 0,
-            mode: SendRemainingValue,
+            value: ton("0.05"),
+            mode: 0,
             body: AddInvest{
                 invested: msg.amount,
                 voted: 0
@@ -175,6 +173,7 @@ contract Project {
             withdrawn: self.withdrawn,
             income: self.income,
             owner: self.owner,
+            stage: self.stage,
             id: self.id,
             data: self.data
         };

@@ -73,12 +73,12 @@ contract TokenMaster with  Deployable {
         let init: StateInit = initOf TokenWallet(sender(), myAddress());
         let to: Address = contractAddress(init);
         require(data.price > 0, "Invalid lvl");
-        require(context().value >= data.price + context().readForwardFee() + ton("0.1"), "Invalid ton amount");
+        require(context().value >= data.price + context().readForwardFee() + ton("0.15"), "Invalid ton amount");
         self.total_supply = (self.total_supply + data.jettons + (data.jettons / 10) + (data.jettons / 20));
-        let sendValue: Int = (data.price / 10 + data.price / 20);
+        let sendValue: Int = ((data.price / 10) + (data.price / 20) + ton("0.15"));
         send(SendParameters {
             to: to,
-            value: sendValue + ton("0.1"),
+            value: (sendValue),
             mode: 0,
             bounce: false,
             body: UpdateSubscribe{
@@ -117,15 +117,21 @@ contract TokenMaster with  Deployable {
     }
 
     receive(msg: CheckWallet) {
-        let wallet: Address = contractAddress(initOf TokenWallet(msg.sender, myAddress()));
-        if(msg.sender == msg.wallet) {
-            msg.wallet = wallet;
-        }
+        let wallet: Address = contractAddress(initOf TokenWallet(sender(), myAddress()));
+        let userWallet: Address = contractAddress(initOf TokenWallet(msg.sender, myAddress()));
         if (msg.wallet == wallet) {
             send(SendParameters {
+                to: userWallet,
+                value: (context().value / 3),
+                mode: 0,
+                body: AddVots{
+                    amount: msg.amount
+                }.toCell()
+            });
+            send(SendParameters {
                 to: sender(),
-                value: 0,
-                mode: SendRemainingValue,
+                value: (context().value / 2),
+                mode: 0,
                 body: Validate{
                     wallet: wallet,
                     sender: msg.sender,

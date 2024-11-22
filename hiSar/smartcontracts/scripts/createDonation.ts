@@ -41,11 +41,11 @@ export async function run(provider: NetworkProvider) {
     await projectsDeployer.send(
         provider.sender(),
         {
-            value: toNano('0.1'),
+            value: toNano('0.3'),
         },
         {
             $$type: 'CreateDonation',
-            data: data2,
+            data: data3,
             owner: owner
         }
     );
