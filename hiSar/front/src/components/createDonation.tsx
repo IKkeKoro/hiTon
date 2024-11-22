@@ -29,7 +29,8 @@ const cardStyles = {
   },
   marginBottom: "24px",
 };
-import { Input } from "@chakra-ui/react"
+import { Input } from "@chakra-ui/react";
+
 
 export function CreateDonation() {
 
@@ -60,7 +61,7 @@ export function CreateDonation() {
                 <Input rounded={'18px'} type="text" placeholder="Description" value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} />
                 <Input rounded={'18px'} type="text" placeholder="Link" value={projectLink} onChange={(e) => setProjectLink(e.target.value)} />
                 <Input rounded={'18px'} type="text" placeholder="Image URL" value={projectImageUrl} onChange={(e) => setProjectImageUrl(e.target.value)} />
-                <ProjectCard />
+                <ProjectCard projectTitle={projectTitle} projectDescription={projectDescription} />
                 <Button 
                   color={"white"} 
                   bgColor={"black"} 
@@ -80,14 +81,13 @@ export function CreateDonation() {
         </Flex>
       </>
     );
-    
-function ProjectCard() {
-  return (
-    <Flex direction="column" align="center" justify="center">
-      <Text fontSize={'2xl'}>{projectTitle}</Text>
-      <Text>{projectDescription}</Text>
-    </Flex>
-  );
+    function ProjectCard({ projectTitle, projectDescription }: { projectTitle: string, projectDescription: string }) {
+      return (
+        <Flex direction="column" align="center" justify="center">
+          <Text fontSize={'2xl'}>{projectTitle}</Text>
+          <Text>{projectDescription}</Text>
+        </Flex>
+      );
+    }
 }
 
-}

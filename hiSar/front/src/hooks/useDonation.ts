@@ -6,53 +6,46 @@ import { useTonClient } from "./useTonClient";
 import { useTonConnect } from "./useTonConnect";
 import { Donation } from "../../abi/ProjectDeployer/tact_Donation";
 import { deployer } from "./addresses";
+import { useEffect, useState } from "react";
+import { DonationData } from "../components/data";
+
+const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
 
 
-
-export type Data = {
-    $$type: 'DonationData';
-    donated: bigint;
-    deployer: Address;
-    id: bigint;
-    owner: Address;
-    data: Data;
-}
-export type DonationData = Promise<{
-    $$type: 'DonationData';
-    donated: bigint;
-    deployer: Address;
-    id: bigint;
-    owner: Address;
-    data: Data;
-}>
 
 export function useDonationContract(id: bigint) {
     const {client} = useTonClient()
     const {wallet, sender} = useTonConnect()
-
-    const deployerContract = useAsyncInitialize(async()=>{
-        if(!client || !wallet) return;
-
-        const contract = ProjectsDeployer.fromAddress(Address.parse(deployer))
-
-        return client.open(contract) as OpenedContract<ProjectsDeployer>
-    }, [client, wallet])
-
+    const [dataD, setData] = useState<DonationData | null>()
     const donationContract = useAsyncInitialize(async()=>{
         if(!client || !wallet) return;
-
+        const contract1 = ProjectsDeployer.fromAddress(Address.parse(deployer))
+        const d = client.open(contract1) as OpenedContract<ProjectsDeployer>
         const contract = Donation.fromAddress(
-            await deployerContract?.getDonationAddress(id)! 
-        )
-
+            await d?.getDonationAddress(id)! 
+        )     
         return client.open(contract) as OpenedContract<Donation>
     }, [client, wallet])
 
+    useEffect(()=>{
+        async function getData() {
+            if(!dataD) return 
+            const data = (await donationContract?.getDonationData())
+            setData(data)
+            await sleep(5000)
+            getData()
+        }
+
+        getData()
+
+    }, [donationContract])
+
 
     return {
+        data: dataD,
         donate: ( amount:bigint) => {
             donationContract?.send(sender, {
-                value: toNano("0.2")
+                value: amount
             }, {
                 $$type: "Donate",
                 amount: amount
@@ -60,6 +53,7 @@ export function useDonationContract(id: bigint) {
         },
         getDonationData: async ( ) => {
             const result = (await donationContract?.getDonationData()) 
+            console.log('Donation data', result)
             return result
         }
     }

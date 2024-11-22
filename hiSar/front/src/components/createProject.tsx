@@ -47,9 +47,7 @@ export function CreateProject() {
     };
 
     const handleProjectPercentsChange = (value: string): bigint[] => {
-      const bigIntArray = convertToBigIntArray(value);
-      console.log(bigIntArray);
-      return bigIntArray as bigint[];
+      return value.split(/[^0-9]/).filter(Boolean).map(num => BigInt(num));
     };
 
     const bigintRequirement = (value: number): bigint => {
@@ -75,7 +73,7 @@ export function CreateProject() {
                 <Input rounded={'18px'} type="text" placeholder="Image URL" value={projectImageUrl} onChange={(e) => setProjectImageUrl(e.target.value)} />
                 <Input rounded={'18px'} type="text" placeholder="Percents 25,25,25,25 must be 100" value={projectPercents} onChange={(e) => setProjectPercents((e.target.value))} />
                 <Input rounded={'18px'} type="number" placeholder="Requirement Investments in ton" value={projectRequirementInvestments} onChange={(e) => setProjectRequirementInvestments((e.target.value))} />
-                <ProjectCard />
+                <ProjectCard projectTitle={projectTitle} projectDescription={projectDescription} />
                 <Button 
                   color={"white"} 
                   bgColor={"black"} 
@@ -97,13 +95,13 @@ export function CreateProject() {
       </>
     );
     
-function ProjectCard() {
+}
+
+export function ProjectCard({ projectTitle, projectDescription }: { projectTitle: string, projectDescription: string }) {
   return (
     <Flex direction="column" align="center" justify="center">
       <Text fontSize={'2xl'}>{projectTitle}</Text>
       <Text>{projectDescription}</Text>
     </Flex>
   );
-}
-
 }

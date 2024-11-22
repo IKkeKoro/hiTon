@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Address, Cell, Dictionary, fromNano, OpenedContract, toNano } from "ton-core";
+
+import { Address, Dictionary, OpenedContract, toNano } from "ton-core";
 
 import { useAsyncInitialize } from "./useAsyncInitialize";
 import { useTonClient } from "./useTonClient";
@@ -41,7 +41,6 @@ export function useDeployerContract() {
                 image: image,
                 link: link
             }
-        
             const owner = Address.parse(sender.address?.toString()!)
             required = toNano(required)
             let percentsD = Dictionary.empty<bigint, bigint>();
@@ -51,7 +50,7 @@ export function useDeployerContract() {
             deployerContract?.send(
                 sender,
                 {
-                    value: toNano('0.02'),
+                    value: toNano('0.2'),
                 },
                 {
                     $$type: 'CreateProject',
@@ -76,7 +75,7 @@ export function useDeployerContract() {
             deployerContract?.send(
                 sender,
                 {
-                    value: toNano('0.02'),
+                    value: toNano('0.2'),
                 },
                 {
                     $$type: 'CreateDonation',

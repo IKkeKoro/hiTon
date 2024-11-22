@@ -1,4 +1,4 @@
-import { Address } from "ton-core";
+import { Address, Dictionary } from "ton-core";
 export type ProjectData =  {
     $$type: "ProjectData";
     voted: bigint;
@@ -17,6 +17,36 @@ export type ProjectData =  {
     };
 } | undefined
 
+
+export type NewDonation = {
+    $$type: 'NewDonation';
+    address: Address;
+    id: bigint;
+    owner: Address;
+    data: {
+        $$type: "Data";
+        title: string;
+        description: string;
+        image: string;
+        link: string;
+    };
+}
+
+export type NewProject = {
+    $$type: 'NewProject';
+    address: Address;
+    id: bigint;
+    data: {
+        $$type: "Data";
+        title: string;
+        description: string;
+        image: string;
+        link: string;
+    };
+    owner: Address;
+    required: bigint;
+    percents: Dictionary<bigint, bigint>;
+}
 
 export type DonationData =  {
     $$type: "DonationData";

@@ -1,4 +1,4 @@
-import { getHttpV4Endpoint } from "@orbs-network/ton-access";
+import { getHttpEndpoint } from "@orbs-network/ton-access";
 import { CHAIN } from "@tonconnect/ui-react";
 import { TonClient } from "ton";
 import { useAsyncInitialize } from "./useAsyncInitialize";
@@ -12,7 +12,7 @@ export function useTonClient() {
             if(!network) return;
 
             return new TonClient({
-                endpoint: await getHttpV4Endpoint({
+                endpoint: await getHttpEndpoint({
                     network: network === CHAIN.MAINNET ? "mainnet" : "testnet"
                 })
             })

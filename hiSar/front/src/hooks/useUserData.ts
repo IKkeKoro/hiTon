@@ -6,7 +6,7 @@ import { useTonClient } from "./useTonClient";
 import { useTonConnect } from "./useTonConnect";
 import { Project } from "../../abi/ProjectDeployer/tact_Project";
 import { deployer } from "./addresses";
-
+import {UserData} from "../../abi/ProjectDeployer/tact_UserData";
 const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
 
 export type Data = {
@@ -17,7 +17,7 @@ export type Data = {
     link: string;
 }
 
-export function useProjectContract(id: bigint) {
+export function useUserData(id: bigint) {
     const {client} = useTonClient()
     const {wallet, sender} = useTonConnect()
 
@@ -29,31 +29,22 @@ export function useProjectContract(id: bigint) {
         const contract = Project.fromAddress(
             address 
         )
+        const v: OpenedContract<Project> = client.open(contract) as OpenedContract<Project>
+        const userData = UserData.fromAddress(
+            await v.getUserData(Address.parse(wallet!))
+        )
 
-        return client.open(contract) as OpenedContract<Project>
+        return client.open(userData) as OpenedContract<UserData>
     }, [client, wallet])
 
     return {
-        ownerWithdraw: ( amount:bigint) => {
+        withdraw: () => {
             projectConatract?.send(sender, {
                 value: toNano("0.05")
             }, {
-                $$type: "OwnerWithdraw",
-                amount: amount
+                $$type: "Withdraw",
+                query_id: 0n
             })
         },
-        invest: ( amount:bigint) => {
-            projectConatract?.send(sender, {
-                value: amount + toNano("0.1")
-            }, {
-                $$type: "Invest",
-                amount: amount
-            })
-        },
-        
-        getProjectData: async () => {
-            const data = (await projectConatract?.getProjectData())
-            return data
-        }
     }
 }

@@ -15,42 +15,42 @@ import { CreateDonation } from "./components/createDonation";
 export function App() {
   const [showBoard, setShowBoard] = useState(true);
   const color = useColorModeValue("black", "white");
-  const bgGradient = useColorModeValue("linear-gradient(135deg, #ffffff 4000%, #000000 6%)", "linear-gradient(135deg, #ffffff 0%, #000000 100%)");
+  const bgGradient = useColorModeValue("linear-gradient(135deg, #f0f0f0 0%, #d0d0d0 100%)", "linear-gradient(135deg, #303030 800%, #202020 100%)");
   return (
     <Router>
     <Box bg="rgba(255, 255, 255, 0.5)" color={color} bgImage={bgGradient} minH="100vh" p="20px" transition="background-color 0.3s ease, color 0.3s ease" style={{ backdropFilter: "blur(100px)" }}>
       <Center >
           <Flex direction="column" gap="16px">
             <Flex justify="center" gap="10px">
-              {window.location.pathname !== "/my-twa/" ? (
-              <Link href={`/my-twa/`}>
+              {window.location.pathname !== "/" ? (
+              <Link href={`/`}>
                 <ChakraButton bgColor="black" color="white" borderRadius="20px">
                 Show Board
                 </ChakraButton>
               </Link>
               ) : (
-              <Link href={`/my-twa/profile`}>
+            
                 <ChakraButton bgColor="black" color="white" borderRadius="20px" onClick={() => {
                 setShowBoard(!showBoard);
                 }}>
                 {showBoard ? "Show Profile" : "Show Board"}
                 </ChakraButton>
-              </Link>
+           
               )}
               <TonConnectButton  />
               
             </Flex>
             <Routes>
-              <Route path={"/my-twa/createproject/"} element={<CreateProject />} />
-              <Route path={"/my-twa/createdonation/"} element={<CreateDonation />} />
-              <Route path={"/my-twa/profile/"} element={<Profile />} />
-              <Route path={"/my-twa/"} element={
+              <Route path={"/createproject/"} element={<CreateProject />} />
+              <Route path={"/createdonation/"} element={<CreateDonation />} />
+              <Route path={"/profile/"} element={<Profile />} />
+              <Route path={"/"} element={
           <Flex direction="column" align="center" spaceY={4}>
             {showBoard ? <Board /> : <Profile />}
           </Flex>
               } />
-              <Route path={`/my-twa/project/:id`} element={<DetailedProject />} />
-              <Route path="/my-twa/donation/:id" element={<DetailedDonation />} />
+              <Route path={`/project/:id`} element={<DetailedProject />} />
+              <Route path="/donation/:id" element={<DetailedDonation />} />
             </Routes>
           </Flex>
         
